@@ -92,7 +92,7 @@ func (logger *logging) asctime() string {
 }
 
 func (logger *logging) msecs() string {
-	return ""
+	return strconv.Itoa(int(logger.startTime % 1000))
 }
 
 func (logger *logging) timestamp() string {
