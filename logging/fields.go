@@ -77,7 +77,7 @@ func (logger *logging) created() string {
 }
 
 func (logger *logging) asctime() string {
-	return ""
+	return time.Now().String()
 }
 
 func (logger *logging) msecs() string {
