@@ -82,11 +82,11 @@ func (logger *logging) SetName(name string) {
 	logger.Name = name
 }
 
-func (logger *logging) GetLevel() int {
-	return int(logger.Level)
+func (logger *logging) GetLevel() Level {
+	return logger.Level
 }
 
-func (logger *logging) SetLevel(level int) {
+func (logger *logging) SetLevel(level Level) {
 	logger.Level = Level(level)
 }
 
