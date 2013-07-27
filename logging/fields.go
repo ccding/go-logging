@@ -7,12 +7,14 @@ package logging
 
 import (
 	"strconv"
+	"sync/atomic"
 	"time"
 )
 
 type field func(*logging) string
 
 var fields = map[string]field{
+	"seqid":           (*logging).seqid,
 	"name":            (*logging).name,
 	"levelno":         (*logging).levelno,
 	"levelname":       (*logging).levelname,
@@ -32,6 +34,10 @@ var fields = map[string]field{
 }
 
 func init() {
+}
+
+func (logger *logging) seqid() string {
+	return strconv.FormatUint(atomic.AddUint64(&(logger.Seqid), 1), 10)
 }
 
 func (logger *logging) name() string {

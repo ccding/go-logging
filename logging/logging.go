@@ -28,6 +28,7 @@ type logging struct {
 	Out       io.Writer
 	lock      sync.Mutex
 	startTime int64
+	Seqid     uint64
 }
 
 // create a new logger with simple configuration
@@ -61,6 +62,7 @@ func Logger(name string, level int, format string, out io.Writer) *logging {
 	logger.Level = level
 	logger.Format = format
 	logger.Out = out
+	logger.Seqid = 0
 
 	logger.init()
 	return logger
