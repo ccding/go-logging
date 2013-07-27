@@ -23,7 +23,7 @@ const (
 // the logging struct
 type logging struct {
 	Name      string
-	Level     int
+	Level     Level
 	Format    string
 	Out       io.Writer
 	lock      sync.Mutex
@@ -47,7 +47,7 @@ func RichLogger(name string) *logging {
 }
 
 // create a new logger with file output
-func FileLogger(name string, level int, format string, file string) *logging {
+func FileLogger(name string, level Level, format string, file string) *logging {
 	out, err := os.Create(file)
 	if err != nil {
 		panic(err)
@@ -56,7 +56,7 @@ func FileLogger(name string, level int, format string, file string) *logging {
 }
 
 // create a new logger
-func Logger(name string, level int, format string, out io.Writer) *logging {
+func Logger(name string, level Level, format string, out io.Writer) *logging {
 	logger := new(logging)
 	logger.Name = name
 	logger.Level = level
@@ -83,16 +83,16 @@ func (logger *logging) SetName(name string) {
 }
 
 func (logger *logging) GetLevel() int {
-	return logger.Level
+	return int(logger.Level)
 }
 
 func (logger *logging) SetLevel(level int) {
-	logger.Level = level
+	logger.Level = Level(level)
 }
 
-func (logger *logging) GetLevelName() (string, bool) {
-	name, ok := levelNames[logger.Level]
-	return name, ok
+func (logger *logging) GetLevelName() string {
+	name, _ := levelNames[logger.Level]
+	return name
 }
 
 func (logger *logging) SetLevelName(name string) {

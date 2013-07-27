@@ -45,7 +45,7 @@ func (logger *logging) name() string {
 }
 
 func (logger *logging) levelno() string {
-	return strconv.Itoa(logger.Level)
+	return strconv.Itoa(int(logger.Level))
 }
 
 func (logger *logging) levelname() string {

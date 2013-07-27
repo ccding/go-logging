@@ -7,18 +7,20 @@ package logging
 
 import ()
 
+type Level int
+
 const (
-	CRITICAL int = 50
-	FATAL    int = CRITICAL
-	ERROR    int = 40
-	WARNING  int = 30
-	WARN     int = WARNING
-	INFO     int = 20
-	DEBUG    int = 10
-	NOTSET   int = 0
+	CRITICAL Level = 50
+	FATAL    Level = CRITICAL
+	ERROR    Level = 40
+	WARNING  Level = 30
+	WARN     Level = WARNING
+	INFO     Level = 20
+	DEBUG    Level = 10
+	NOTSET   Level = 0
 )
 
-var levelNames = map[int]string{
+var levelNames = map[Level]string{
 	CRITICAL: "CRITICAL",
 	ERROR:    "ERROR",
 	WARNING:  "WARNING",
@@ -27,7 +29,7 @@ var levelNames = map[int]string{
 	NOTSET:   "NOTSET",
 }
 
-var levelValues = map[string]int{
+var levelValues = map[string]Level{
 	"CRITICAL": CRITICAL,
 	"ERROR":    ERROR,
 	"WARN":     WARNING,
@@ -39,7 +41,7 @@ var levelValues = map[string]int{
 
 type levelPair struct {
 	name  string
-	value int
+	value Level
 }
 
 const maxAddLevelCacheSize = 10
@@ -54,15 +56,19 @@ func init() {
 	go watchLevelUpdate()
 }
 
-func GetLeveName(levelValue int) string {
+func (level *Level) String() string {
+	return levelNames[*level]
+}
+
+func GetLeveName(levelValue Level) string {
 	return levelNames[levelValue]
 }
 
-func GetLevelValue(levelName string) int {
+func GetLevelValue(levelName string) Level {
 	return levelValues[levelName]
 }
 
-func AddLevel(levelName string, levelValue int) {
+func AddLevel(levelName string, levelValue Level) {
 	level := new(levelPair)
 	level.name = levelName
 	level.value = levelValue

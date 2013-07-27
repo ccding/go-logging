@@ -10,25 +10,25 @@ import (
 )
 
 // receive log request from the client, and start new goroute to record it
-func (logger *logging) Logln(level int, v ...interface{}) {
+func (logger *logging) Logln(level Level, v ...interface{}) {
 	go logger.logln(level, v...)
 }
 
-func (logger *logging) Logf(level int, format string, v ...interface{}) {
+func (logger *logging) Logf(level Level, format string, v ...interface{}) {
 	go logger.logf(level, format, v...)
 }
 
 // record log v... with level `level'
-func (logger *logging) logln(level int, v ...interface{}) {
-	if level >= logger.Level {
+func (logger *logging) logln(level Level, v ...interface{}) {
+	if int(level) >= int(logger.Level) {
 		logger.lock.Lock()
 		defer logger.lock.Unlock()
 		fmt.Fprintln(logger.Out, v...)
 	}
 }
 
-func (logger *logging) logf(level int, format string, v ...interface{}) {
-	if level >= logger.Level {
+func (logger *logging) logf(level Level, format string, v ...interface{}) {
+	if int(level) >= int(logger.Level) {
 		logger.lock.Lock()
 		defer logger.lock.Unlock()
 		fmt.Fprintf(logger.Out, format+"\n", v...)
