@@ -60,7 +60,7 @@ func (level *Level) String() string {
 	return levelNames[*level]
 }
 
-func GetLeveName(levelValue Level) string {
+func GetLevelName(levelValue Level) string {
 	return levelNames[levelValue]
 }
 
@@ -69,6 +69,10 @@ func GetLevelValue(levelName string) Level {
 }
 
 func AddLevel(levelName string, levelValue Level) {
+	SetLevel(levelName, levelValue)
+}
+
+func SetLevel(levelName string, levelValue Level) {
 	level := new(levelPair)
 	level.name = levelName
 	level.value = levelValue
