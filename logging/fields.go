@@ -57,7 +57,12 @@ func (logger *logging) levelname() string {
 }
 
 func (logger *logging) pathname() string {
-	return ""
+	calldepth := 5
+	_, file, _, ok := runtime.Caller(calldepth)
+	if !ok {
+		file = "???"
+	}
+	return file
 }
 
 func (logger *logging) filename() string {
@@ -66,6 +71,14 @@ func (logger *logging) filename() string {
 	if !ok {
 		file = "???"
 	}
+	short := file
+	for i := len(file) - 1; i > 0; i-- {
+		if file[i] == '/' {
+			short = file[i+1:]
+			break
+		}
+	}
+	file = short
 	return file
 }
 
