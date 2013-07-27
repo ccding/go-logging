@@ -33,3 +33,5 @@ number, etc.
     %(message)s         The result of record.getMessage(), computed just as
                         the record is emitted
 ```
+
+3. read configuration from file
