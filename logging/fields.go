@@ -6,6 +6,7 @@
 package logging
 
 import (
+	"runtime"
 	"strconv"
 	"sync/atomic"
 	"time"
@@ -57,7 +58,12 @@ func (logger *logging) pathname() string {
 }
 
 func (logger *logging) filename() string {
-	return ""
+	calldepth := 5
+	_, file, _, ok := runtime.Caller(calldepth)
+	if !ok {
+		file = "???"
+	}
+	return file
 }
 
 func (logger *logging) module() string {
@@ -65,7 +71,12 @@ func (logger *logging) module() string {
 }
 
 func (logger *logging) lineno() string {
-	return ""
+	calldepth := 5
+	_, _, line, ok := runtime.Caller(calldepth)
+	if !ok {
+		line = 0
+	}
+	return strconv.Itoa(line)
 }
 
 func (logger *logging) funcName() string {
