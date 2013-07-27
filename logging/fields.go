@@ -34,6 +34,10 @@ var fields = map[string]field{
 	"message":         (*logging).message,
 }
 
+// the calling depth of these function, which is used to call the
+// runtime.Caller() function to get the line number and file name
+var calldepth = 5
+
 // GetGoId returns the id of goroutine, which is defined in ./get_go_id.c
 func GetGoId() int32
 
@@ -57,7 +61,6 @@ func (logger *logging) levelname() string {
 }
 
 func (logger *logging) pathname() string {
-	calldepth := 5
 	_, file, _, ok := runtime.Caller(calldepth)
 	if !ok {
 		file = "???"
@@ -66,7 +69,6 @@ func (logger *logging) pathname() string {
 }
 
 func (logger *logging) filename() string {
-	calldepth := 5
 	_, file, _, ok := runtime.Caller(calldepth)
 	if !ok {
 		file = "???"
@@ -87,7 +89,6 @@ func (logger *logging) module() string {
 }
 
 func (logger *logging) lineno() string {
-	calldepth := 5
 	_, _, line, ok := runtime.Caller(calldepth)
 	if !ok {
 		line = 0
@@ -96,7 +97,6 @@ func (logger *logging) lineno() string {
 }
 
 func (logger *logging) funcName() string {
-	calldepth := 5
 	pc, _, _, ok := runtime.Caller(calldepth)
 	if !ok {
 		return "???"
