@@ -34,6 +34,9 @@ var fields = map[string]field{
 	"message":         (*logging).message,
 }
 
+// GetGoId returns the id of goroutine, which is defined in ./get_go_id.c
+func GetGoId() int32
+
 func init() {
 }
 
@@ -109,7 +112,7 @@ func (logger *logging) relativeCreated() string {
 }
 
 func (logger *logging) thread() string {
-	return ""
+	return strconv.Itoa(int(GetGoId()))
 }
 
 func (logger *logging) threadName() string {
