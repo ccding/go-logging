@@ -17,6 +17,9 @@ func TestAddLevel(t *testing.T) {
 		name := "L" + strconv.Itoa(i)
 		AddLevel(name, level)
 		time.Sleep(time.Second / 1000)
+		if level.String() != name {
+			t.Errorf("%v, %v, %v", level, name, level.String())
+		}
 		if levelNames[level] != name {
 			t.Errorf("%v, %v, %v", level, name, levelNames[level])
 		}
@@ -38,6 +41,9 @@ func TestSetLevel(t *testing.T) {
 		name := "S" + strconv.Itoa(i)
 		SetLevel(name, level)
 		time.Sleep(time.Second / 1000)
+		if level.String() != name {
+			t.Errorf("%v, %v, %v", level, name, level.String())
+		}
 		if levelNames[level] != name {
 			t.Errorf("%v, %v, %v", level, name, levelNames[level])
 		}
