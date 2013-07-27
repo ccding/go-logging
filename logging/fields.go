@@ -34,10 +34,6 @@ var fields = map[string]field{
 func init() {
 }
 
-func tt() string {
-	return ""
-}
-
 func (logger *logging) name() string {
 	return logger.Name
 }
