@@ -17,6 +17,7 @@ const (
 	basicFormat     = "%(name)s [%(levelname)s] %(asctime)s - %(message)s"
 	richFormat      = "%(name)s [%(levelname)s] %(asctime)s - %(thread)d - %(module)s:%(filename)s:%(funcName)s:%(lineno)d- %(message)s"
 	defaultFileName = "logging.log"
+	configFileName  = "logging.conf"
 )
 
 // the logging struct
