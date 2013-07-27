@@ -37,33 +37,33 @@ func (logger *logging) logf(level Level, format string, v ...interface{}) {
 
 // other quick commands
 func (logger *logging) Critical(v ...interface{}) {
-	logger.Logln(CRITICAL, v...)
+	go logger.logln(CRITICAL, v...)
 }
 
 func (logger *logging) Fatal(v ...interface{}) {
-	logger.Logln(CRITICAL, v...)
+	go logger.logln(CRITICAL, v...)
 }
 
 func (logger *logging) Error(v ...interface{}) {
-	logger.Logln(ERROR, v...)
+	go logger.logln(ERROR, v...)
 }
 
 func (logger *logging) Warn(v ...interface{}) {
-	logger.Logln(WARNING, v...)
+	go logger.logln(WARNING, v...)
 }
 
 func (logger *logging) Warning(v ...interface{}) {
-	logger.Logln(WARNING, v...)
+	go logger.logln(WARNING, v...)
 }
 
 func (logger *logging) Info(v ...interface{}) {
-	logger.Logln(INFO, v...)
+	go logger.logln(INFO, v...)
 }
 
 func (logger *logging) Debug(v ...interface{}) {
-	logger.Logln(DEBUG, v...)
+	go logger.logln(DEBUG, v...)
 }
 
 func (logger *logging) Log(v ...interface{}) {
-	logger.Logln(NOTSET, v...)
+	go logger.logln(NOTSET, v...)
 }
