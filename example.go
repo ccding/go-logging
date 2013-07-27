@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ccding/logging/logging"
+	"github.com/ccding/go-logging/logging"
 	"time"
 )
 
