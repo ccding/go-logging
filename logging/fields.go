@@ -80,7 +80,12 @@ func (logger *logging) lineno() string {
 }
 
 func (logger *logging) funcName() string {
-	return ""
+	calldepth := 5
+	pc, _, _, ok := runtime.Caller(calldepth)
+	if !ok {
+		return "???"
+	}
+	return runtime.FuncForPC(pc).Name()
 }
 
 func (logger *logging) created() string {
