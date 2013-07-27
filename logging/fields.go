@@ -116,7 +116,7 @@ func (logger *logging) thread() string {
 }
 
 func (logger *logging) threadName() string {
-	return ""
+	return strconv.Itoa(int(GetGoId()))
 }
 
 func (logger *logging) process() string {
