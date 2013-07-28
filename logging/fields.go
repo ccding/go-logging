@@ -69,10 +69,6 @@ var fields = map[string]field{
 	"timestamp":       (*logging).timestamp,
 }
 
-// the calling depth of these function, which is used to call the
-// runtime.Caller() function to get the line number and file name
-var calldepth = 5
-
 const errorString = "???"
 
 // GetGoId returns the id of goroutine, which is defined in ./get_go_id.c
@@ -84,6 +80,7 @@ func init() {
 // generate the runtime information, including pathname, function name,
 // filename, line number.
 func genRuntime(l *log) {
+	calldepth := 5
 	pc, file, line, ok := runtime.Caller(calldepth)
 	if ok {
 		// generate short filename
