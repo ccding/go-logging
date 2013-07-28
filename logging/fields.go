@@ -28,7 +28,7 @@ import (
 type log struct {
 	level           Level
 	name            string
-	nextSeqid       uint64
+	seqid           uint64
 	levelno         int
 	levelname       string
 	pathname        string
@@ -51,7 +51,7 @@ type field func(*logging, *log) interface{}
 
 var fields = map[string]field{
 	"name":            (*logging).lname,
-	"nextSeqid":       (*logging).nextSeqid,
+	"seqid":           (*logging).nextSeqid,
 	"levelno":         (*logging).levelno,
 	"levelname":       (*logging).levelname,
 	"pathname":        (*logging).pathname,
@@ -108,7 +108,10 @@ func (logger *logging) lname(l *log) interface{} {
 }
 
 func (logger *logging) nextSeqid(l *log) interface{} {
-	return atomic.AddUint64(&(logger.seqid), 1)
+	if l.seqid == 0 {
+		l.seqid = atomic.AddUint64(&(logger.seqid), 1)
+	}
+	return l.seqid
 }
 
 func (logger *logging) levelno(l *log) interface{} {
