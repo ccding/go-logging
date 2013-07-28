@@ -24,7 +24,7 @@ import (
 // pre-defined formats
 const (
 	BasicFormat = "%s [%s] %s - %s\n name,levelname,asctime,message"
-	RichFormat  = "%s [%s] %s - %d - %s:%s:%d - %s\n name, levelname, asctime, thread, filename, funcName, lineno, message"
+	RichFormat  = "%s [%s] %d %s - %d - %s:%s:%d - %s\n name, levelname, seqid, asctime, thread, filename, funcName, lineno, message"
 )
 
 func (logger *logging) genLog(level Level, message string) string {
