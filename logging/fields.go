@@ -69,7 +69,7 @@ var fields = map[string]field{
 	"timestamp":       (*logging).timestamp,
 }
 
-const errorString = "???"
+const errString = "???"
 
 // GetGoId returns the id of goroutine, which is defined in ./get_go_id.c
 func GetGoId() int32
@@ -97,9 +97,9 @@ func genRuntime(l *log) {
 		l.filename = short
 		l.lineno = line
 	} else {
-		l.pathname = errorString
-		l.funcName = errorString
-		l.filename = errorString
+		l.pathname = errString
+		l.funcName = errString
+		l.filename = errString
 		l.lineno = 0
 	}
 }
