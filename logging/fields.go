@@ -81,8 +81,6 @@ func genRuntime(l *log) {
 	calldepth := 5
 	pc, file, line, ok := runtime.Caller(calldepth)
 	if ok {
-		// generate short filename
-
 		// generate short function name
 		fname := runtime.FuncForPC(pc).Name()
 		fshort := fname
