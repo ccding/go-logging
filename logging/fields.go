@@ -17,17 +17,17 @@
 package logging
 
 import (
+	"fmt"
 	"os"
 	"runtime"
-	"strconv"
 	"sync/atomic"
 	"time"
 )
 
-type field func(*logging) string
+type field func(*logging) interface{}
 
 var fields = map[string]field{
-	"name":            (*logging).Name,
+	"name":            (*logging).lname,
 	"nextSeqid":       (*logging).nextSeqid,
 	"levelno":         (*logging).levelno,
 	"levelname":       (*logging).levelname,
@@ -49,6 +49,7 @@ var fields = map[string]field{
 // the calling depth of these function, which is used to call the
 // runtime.Caller() function to get the line number and file name
 var calldepth = 5
+
 const errorString = "???"
 
 // GetGoId returns the id of goroutine, which is defined in ./get_go_id.c
@@ -57,19 +58,23 @@ func GetGoId() int32
 func init() {
 }
 
-func (logger *logging) nextSeqid() string {
-	return strconv.FormatUint(atomic.AddUint64(&(logger.seqid), 1), 10)
+func (logger *logging) lname() interface{} {
+	return logger.name
 }
 
-func (logger *logging) levelno() string {
-	return strconv.Itoa(int(logger.level))
+func (logger *logging) nextSeqid() interface{} {
+	return atomic.AddUint64(&(logger.seqid), 1)
 }
 
-func (logger *logging) levelname() string {
+func (logger *logging) levelno() interface{} {
+	return int(logger.level)
+}
+
+func (logger *logging) levelname() interface{} {
 	return levelNames[logger.level]
 }
 
-func (logger *logging) pathname() string {
+func (logger *logging) pathname() interface{} {
 	_, file, _, ok := runtime.Caller(calldepth)
 	if !ok {
 		file = errorString
@@ -77,7 +82,7 @@ func (logger *logging) pathname() string {
 	return file
 }
 
-func (logger *logging) filename() string {
+func (logger *logging) filename() interface{} {
 	_, file, _, ok := runtime.Caller(calldepth)
 	if !ok {
 		file = errorString
@@ -93,19 +98,19 @@ func (logger *logging) filename() string {
 	return file
 }
 
-func (logger *logging) module() string {
+func (logger *logging) module() interface{} {
 	return ""
 }
 
-func (logger *logging) lineno() string {
+func (logger *logging) lineno() interface{} {
 	_, _, line, ok := runtime.Caller(calldepth)
 	if !ok {
 		line = 0
 	}
-	return strconv.Itoa(line)
+	return line
 }
 
-func (logger *logging) funcName() string {
+func (logger *logging) funcName() interface{} {
 	pc, _, _, ok := runtime.Caller(calldepth)
 	if !ok {
 		return errorString
@@ -113,39 +118,39 @@ func (logger *logging) funcName() string {
 	return runtime.FuncForPC(pc).Name()
 }
 
-func (logger *logging) created() string {
-	return strconv.FormatInt(logger.startTime, 10)
+func (logger *logging) created() interface{} {
+	return logger.startTime
 }
 
-func (logger *logging) asctime() string {
+func (logger *logging) asctime() interface{} {
 	return time.Now().String()
 }
 
-func (logger *logging) msecs() string {
-	return strconv.Itoa(int(logger.startTime % 1000))
+func (logger *logging) msecs() interface{} {
+	return logger.startTime % 1000
 }
 
-func (logger *logging) timestamp() string {
-	return strconv.FormatInt(time.Now().UnixNano(), 10)
+func (logger *logging) timestamp() interface{} {
+	return time.Now().UnixNano()
 }
 
-func (logger *logging) relativeCreated() string {
-	return strconv.FormatInt(time.Now().UnixNano()-logger.startTime, 10)
+func (logger *logging) relativeCreated() interface{} {
+	return time.Now().UnixNano() - logger.startTime
 }
 
-func (logger *logging) thread() string {
-	return strconv.Itoa(int(GetGoId()))
+func (logger *logging) thread() interface{} {
+	return int(GetGoId())
 }
 
-func (logger *logging) threadName() string {
-	return strconv.Itoa(int(GetGoId()))
+func (logger *logging) threadName() interface{} {
+	return fmt.Sprintf("Thread-%d", GetGoId())
 }
 
 // Process ID
-func (logger *logging) process() string {
-	return strconv.Itoa(os.Getpid())
+func (logger *logging) process() interface{} {
+	return os.Getpid()
 }
 
-func (logger *logging) message() string {
+func (logger *logging) message() interface{} {
 	return ""
 }
