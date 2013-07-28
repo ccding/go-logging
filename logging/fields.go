@@ -25,7 +25,7 @@ import (
 	"time"
 )
 
-type log struct {
+type record struct {
 	level      Level
 	seqid      uint64
 	pathname   string
@@ -40,7 +40,7 @@ type log struct {
 	time       time.Time
 }
 
-type field func(*logging, *log) interface{}
+type field func(*logging, *record) interface{}
 
 var fields = map[string]field{
 	"name":            (*logging).lname,
@@ -70,7 +70,7 @@ func GetGoId() int32
 
 // generate the runtime information, including pathname, function name,
 // filename, line number.
-func genRuntime(l *log) {
+func genRuntime(r *record) {
 	calldepth := 5
 	pc, file, line, ok := runtime.Caller(calldepth)
 	if ok {
@@ -84,120 +84,120 @@ func genRuntime(l *log) {
 			}
 		}
 
-		l.pathname = file
-		l.funcName = fshort
-		l.filename = path.Base(file)
-		l.lineno = line
+		r.pathname = file
+		r.funcName = fshort
+		r.filename = path.Base(file)
+		r.lineno = line
 	} else {
-		l.pathname = errString
-		l.funcName = errString
-		l.filename = errString
-		l.lineno = -1
+		r.pathname = errString
+		r.funcName = errString
+		r.filename = errString
+		r.lineno = -1
 	}
 }
 
-func (logger *logging) lname(l *log) interface{} {
+func (logger *logging) lname(r *record) interface{} {
 	return logger.name
 }
 
-func (logger *logging) nextSeqid(l *log) interface{} {
-	if l.seqid == 0 {
-		l.seqid = atomic.AddUint64(&(logger.seqid), 1)
+func (logger *logging) nextSeqid(r *record) interface{} {
+	if r.seqid == 0 {
+		r.seqid = atomic.AddUint64(&(logger.seqid), 1)
 	}
-	return l.seqid
+	return r.seqid
 }
 
-func (logger *logging) levelno(l *log) interface{} {
-	return int(l.level)
+func (logger *logging) levelno(r *record) interface{} {
+	return int(r.level)
 }
 
-func (logger *logging) levelname(l *log) interface{} {
-	return levelNames[l.level]
+func (logger *logging) levelname(r *record) interface{} {
+	return levelNames[r.level]
 }
 
-func (logger *logging) pathname(l *log) interface{} {
-	if l.pathname == "" {
-		genRuntime(l)
+func (logger *logging) pathname(r *record) interface{} {
+	if r.pathname == "" {
+		genRuntime(r)
 	}
-	return l.pathname
+	return r.pathname
 }
 
-func (logger *logging) filename(l *log) interface{} {
-	if l.filename == "" {
-		genRuntime(l)
+func (logger *logging) filename(r *record) interface{} {
+	if r.filename == "" {
+		genRuntime(r)
 	}
-	return l.filename
+	return r.filename
 }
 
-func (logger *logging) module(l *log) interface{} {
+func (logger *logging) module(r *record) interface{} {
 	return ""
 }
 
-func (logger *logging) lineno(l *log) interface{} {
-	if l.lineno == 0 {
-		genRuntime(l)
+func (logger *logging) lineno(r *record) interface{} {
+	if r.lineno == 0 {
+		genRuntime(r)
 	}
-	return l.lineno
+	return r.lineno
 }
 
-func (logger *logging) funcName(l *log) interface{} {
-	if l.funcName == "" {
-		genRuntime(l)
+func (logger *logging) funcName(r *record) interface{} {
+	if r.funcName == "" {
+		genRuntime(r)
 	}
-	return l.funcName
+	return r.funcName
 }
 
-func (logger *logging) created(l *log) interface{} {
+func (logger *logging) created(r *record) interface{} {
 	return logger.startTime.UnixNano()
 }
 
-func (logger *logging) asctime(l *log) interface{} {
-	if l.time.IsZero() {
-		l.time = time.Now()
+func (logger *logging) asctime(r *record) interface{} {
+	if r.time.IsZero() {
+		r.time = time.Now()
 	}
-	return l.time.Format("2006-01-02 15:04:05.999999999")
+	return r.time.Format("2006-01-02 15:04:05.999999999")
 }
 
-func (logger *logging) msecs(l *log) interface{} {
+func (logger *logging) msecs(r *record) interface{} {
 	return logger.startTime.Nanosecond()
 }
 
-func (logger *logging) timestamp(l *log) interface{} {
-	if l.time.IsZero() {
-		l.time = time.Now()
+func (logger *logging) timestamp(r *record) interface{} {
+	if r.time.IsZero() {
+		r.time = time.Now()
 	}
-	return l.time.UnixNano()
+	return r.time.UnixNano()
 }
 
-func (logger *logging) relativeCreated(l *log) interface{} {
-	if l.time.IsZero() {
-		l.time = time.Now()
+func (logger *logging) relativeCreated(r *record) interface{} {
+	if r.time.IsZero() {
+		r.time = time.Now()
 	}
-	return l.time.Sub(logger.startTime).Nanoseconds()
+	return r.time.Sub(logger.startTime).Nanoseconds()
 }
 
-func (logger *logging) thread(l *log) interface{} {
-	if l.thread == 0 {
-		l.thread = int(GetGoId())
+func (logger *logging) thread(r *record) interface{} {
+	if r.thread == 0 {
+		r.thread = int(GetGoId())
 	}
-	return l.thread
+	return r.thread
 }
 
-func (logger *logging) threadName(l *log) interface{} {
-	if l.threadName == "" {
-		l.threadName = fmt.Sprintf("Thread-%d", GetGoId())
+func (logger *logging) threadName(r *record) interface{} {
+	if r.threadName == "" {
+		r.threadName = fmt.Sprintf("Thread-%d", GetGoId())
 	}
-	return l.threadName
+	return r.threadName
 }
 
 // Process ID
-func (logger *logging) process(l *log) interface{} {
-	if l.process == 0 {
-		l.process = os.Getpid()
+func (logger *logging) process(r *record) interface{} {
+	if r.process == 0 {
+		r.process = os.Getpid()
 	}
-	return l.process
+	return r.process
 }
 
-func (logger *logging) message(l *log) interface{} {
-	return l.message
+func (logger *logging) message(r *record) interface{} {
+	return r.message
 }

@@ -34,11 +34,11 @@ func (logger *logging) genLog(level Level, message string) string {
 	}
 	args := strings.Split(format[1], ",")
 	fs := make([]interface{}, len(args))
-	l := new(log)
-	l.message = message
-	l.level = level
+	r := new(record)
+	r.message = message
+	r.level = level
 	for k, v := range args {
-		fs[k] = fields[strings.TrimSpace(v)](logger, l)
+		fs[k] = fields[strings.TrimSpace(v)](logger, r)
 	}
 	return fmt.Sprintf(format[0], fs...)
 }
