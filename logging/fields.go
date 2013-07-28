@@ -16,6 +16,7 @@ import (
 type field func(*logging) string
 
 var fields = map[string]field{
+	"name":            (*logging).Name,
 	"nextSeqid":       (*logging).nextSeqid,
 	"levelno":         (*logging).levelno,
 	"levelname":       (*logging).levelname,
