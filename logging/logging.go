@@ -42,7 +42,7 @@ type logging struct {
 
 // create a new logger with simple configuration
 func SimpleLogger(name string) *logging {
-	return Logger(name, WARNING, basicFormat, os.Stdout)
+	return Logger(name, WARNING, BasicFormat, os.Stdout)
 }
 
 // create a new logger with basic configuration
@@ -52,7 +52,7 @@ func BasicLogger(name string) *logging {
 
 // create a new logger with simple configuration
 func RichLogger(name string) *logging {
-	return FileLogger(name, NOTSET, richFormat, defaultFileName)
+	return FileLogger(name, NOTSET, RichFormat, defaultFileName)
 }
 
 // create a new logger with file output
