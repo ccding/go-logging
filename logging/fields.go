@@ -99,7 +99,7 @@ func genRuntime(l *log) {
 		l.pathname = errString
 		l.funcName = errString
 		l.filename = errString
-		l.lineno = 0
+		l.lineno = -1
 	}
 }
 
