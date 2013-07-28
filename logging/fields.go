@@ -15,8 +15,7 @@ import (
 type field func(*logging) string
 
 var fields = map[string]field{
-	"seqid":           (*logging).seqid,
-	"name":            (*logging).name,
+	"nextSeqid":       (*logging).nextSeqid,
 	"levelno":         (*logging).levelno,
 	"levelname":       (*logging).levelname,
 	"pathname":        (*logging).pathname,
@@ -44,20 +43,16 @@ func GetGoId() int32
 func init() {
 }
 
-func (logger *logging) seqid() string {
-	return strconv.FormatUint(atomic.AddUint64(&(logger.Seqid), 1), 10)
-}
-
-func (logger *logging) name() string {
-	return logger.Name
+func (logger *logging) nextSeqid() string {
+	return strconv.FormatUint(atomic.AddUint64(&(logger.seqid), 1), 10)
 }
 
 func (logger *logging) levelno() string {
-	return strconv.Itoa(int(logger.Level))
+	return strconv.Itoa(int(logger.level))
 }
 
 func (logger *logging) levelname() string {
-	return levelNames[logger.Level]
+	return levelNames[logger.level]
 }
 
 func (logger *logging) pathname() string {

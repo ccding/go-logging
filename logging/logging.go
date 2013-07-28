@@ -22,13 +22,13 @@ const (
 
 // the logging struct
 type logging struct {
-	Name      string
-	Level     Level
-	Format    string
-	Out       io.Writer
+	name      string
+	level     Level
+	format    string
+	out       io.Writer
 	lock      sync.Mutex
 	startTime int64
-	Seqid     uint64
+	seqid     uint64
 }
 
 // create a new logger with simple configuration
@@ -58,11 +58,11 @@ func FileLogger(name string, level Level, format string, file string) *logging {
 // create a new logger
 func Logger(name string, level Level, format string, out io.Writer) *logging {
 	logger := new(logging)
-	logger.Name = name
-	logger.Level = level
-	logger.Format = format
-	logger.Out = out
-	logger.Seqid = 0
+	logger.name = name
+	logger.level = level
+	logger.format = format
+	logger.out = out
+	logger.seqid = 0
 
 	logger.init()
 	return logger
@@ -74,46 +74,46 @@ func (logger *logging) init() {
 }
 
 // get and set the configuration of the logger
-func (logger *logging) GetName() string {
-	return logger.Name
+func (logger *logging) Name() string {
+	return logger.name
 }
 
 func (logger *logging) SetName(name string) {
-	logger.Name = name
+	logger.name = name
 }
 
-func (logger *logging) GetLevel() Level {
-	return logger.Level
+func (logger *logging) Level() Level {
+	return logger.level
 }
 
 func (logger *logging) SetLevel(level Level) {
-	logger.Level = Level(level)
+	logger.level = Level(level)
 }
 
-func (logger *logging) GetLevelName() string {
-	name, _ := levelNames[logger.Level]
+func (logger *logging) LevelName() string {
+	name, _ := levelNames[logger.level]
 	return name
 }
 
 func (logger *logging) SetLevelName(name string) {
 	level, ok := levelValues[name]
 	if ok {
-		logger.Level = level
+		logger.level = level
 	}
 }
 
-func (logger *logging) GetFormat() string {
-	return logger.Format
+func (logger *logging) Format() string {
+	return logger.format
 }
 
 func (logger *logging) SetFormat(format string) {
-	logger.Format = format
+	logger.format = format
 }
 
-func (logger *logging) GetWriger() io.Writer {
-	return logger.Out
+func (logger *logging) Wriger() io.Writer {
+	return logger.out
 }
 
 func (logger *logging) SetWriter(out io.Writer) {
-	logger.Out = out
+	logger.out = out
 }
