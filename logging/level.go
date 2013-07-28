@@ -5,8 +5,6 @@
 // author: Cong Ding <dinggnu@gmail.com>
 package logging
 
-import ()
-
 type Level int
 
 const (
@@ -20,7 +18,7 @@ const (
 	NOTSET   Level = 0
 )
 
-var levelNames = map[Level]string{
+var levelNames = map[Level] string {
 	CRITICAL: "CRITICAL",
 	ERROR:    "ERROR",
 	WARNING:  "WARNING",
@@ -29,7 +27,7 @@ var levelNames = map[Level]string{
 	NOTSET:   "NOTSET",
 }
 
-var levelValues = map[string]Level{
+var levelValues = map[string] Level {
 	"CRITICAL": CRITICAL,
 	"ERROR":    ERROR,
 	"WARN":     WARNING,
@@ -46,9 +44,7 @@ type levelPair struct {
 
 const maxAddLevelCacheSize = 10
 
-var (
-	levelPairs chan *levelPair
-)
+var levelPairs chan *levelPair
 
 func init() {
 	levelPairs = make(chan *levelPair, maxAddLevelCacheSize)

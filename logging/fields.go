@@ -11,11 +11,12 @@ import (
 	"strconv"
 	"sync/atomic"
 	"time"
+	"path"
 )
 
 type field func(*logging) string
 
-var fields = map[string]field{
+var fields = map[string] field {
 	"nextSeqid":       (*logging).nextSeqid,
 	"levelno":         (*logging).levelno,
 	"levelname":       (*logging).levelname,
@@ -41,9 +42,6 @@ var calldepth = 5
 // GetGoId returns the id of goroutine, which is defined in ./get_go_id.c
 func GetGoId() int32
 
-func init() {
-}
-
 func (logger *logging) nextSeqid() string {
 	return strconv.FormatUint(atomic.AddUint64(&(logger.seqid), 1), 10)
 }
@@ -65,19 +63,7 @@ func (logger *logging) pathname() string {
 }
 
 func (logger *logging) filename() string {
-	_, file, _, ok := runtime.Caller(calldepth)
-	if !ok {
-		file = "???"
-	}
-	short := file
-	for i := len(file) - 1; i > 0; i-- {
-		if file[i] == '/' {
-			short = file[i+1:]
-			break
-		}
-	}
-	file = short
-	return file
+	return path.Base(logger.pathname())
 }
 
 func (logger *logging) module() string {
