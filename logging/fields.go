@@ -155,7 +155,7 @@ func (logger *logging) asctime(l *log) interface{} {
 	if l.time.IsZero() {
 		l.time = time.Now()
 	}
-	return l.time.String()
+	return l.time.Format("2006-01-02 15:04:05.999999999")
 }
 
 func (logger *logging) msecs(l *log) interface{} {
