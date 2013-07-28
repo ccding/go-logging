@@ -121,7 +121,7 @@ func (logger *logging) SetFormat(format string) {
 	logger.format = format
 }
 
-func (logger *logging) Wriger() io.Writer {
+func (logger *logging) Writer() io.Writer {
 	return logger.out
 }
 

@@ -19,7 +19,7 @@
 // runtime.c file of golang source code.
 #include <runtime.h>
 
-void ·GetGoId(int32 ret) {
+void GetGoId(int32 ret) {
 	ret = g->goid;
 	USED(&ret);
 }
