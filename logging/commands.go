@@ -32,22 +32,24 @@ func (logger *logging) Logf(level Level, format string, v ...interface{}) {
 // record log v... with level `level'
 func (logger *logging) logln(level Level, v ...interface{}) {
 	if int(level) >= int(logger.level) {
-		logger.lock.Lock()
-		defer logger.lock.Unlock()
 		message := fmt.Sprint(v...)
 		message = logger.genLog(level, message)
-		go fmt.Fprintln(logger.out, message)
+		go logger.printLog(message)
 	}
 }
 
 func (logger *logging) logf(level Level, format string, v ...interface{}) {
 	if int(level) >= int(logger.level) {
-		logger.lock.Lock()
-		defer logger.lock.Unlock()
 		message := fmt.Sprintf(format, v...)
 		message = logger.genLog(level, message)
-		go fmt.Fprintln(logger.out, message)
+		go logger.printLog(message)
 	}
+}
+
+func (logger *logging) printLog(message string) {
+	logger.lock.Lock()
+	defer logger.lock.Unlock()
+	fmt.Fprintln(logger.out, message)
 }
 
 // other quick commands
