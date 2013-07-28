@@ -1,8 +1,19 @@
 // Copyright 2013, Cong Ding. All rights reserved.
-// Use of this source code is governed by a GPLv2
-// license that can be found in the LICENSE file.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // author: Cong Ding <dinggnu@gmail.com>
+//
 package logging
 
 import (
@@ -16,7 +27,8 @@ import (
 
 type field func(*logging) string
 
-var fields = map[string] field {
+var fields = map[string]field{
+	"name":            (*logging).Name,
 	"nextSeqid":       (*logging).nextSeqid,
 	"levelno":         (*logging).levelno,
 	"levelname":       (*logging).levelname,
@@ -38,6 +50,7 @@ var fields = map[string] field {
 // the calling depth of these function, which is used to call the
 // runtime.Caller() function to get the line number and file name
 var calldepth = 5
+const errorString = "???"
 
 // GetGoId returns the id of goroutine, which is defined in ./get_go_id.c
 func GetGoId() int32
@@ -57,7 +70,7 @@ func (logger *logging) levelname() string {
 func (logger *logging) pathname() string {
 	_, file, _, ok := runtime.Caller(calldepth)
 	if !ok {
-		file = "???"
+		file = errorString
 	}
 	return file
 }
@@ -81,7 +94,7 @@ func (logger *logging) lineno() string {
 func (logger *logging) funcName() string {
 	pc, _, _, ok := runtime.Caller(calldepth)
 	if !ok {
-		return "???"
+		return errorString
 	}
 	return runtime.FuncForPC(pc).Name()
 }
