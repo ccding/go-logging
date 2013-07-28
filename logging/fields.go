@@ -26,25 +26,18 @@ import (
 )
 
 type log struct {
-	level           Level
-	name            string
-	seqid           uint64
-	levelno         int
-	levelname       string
-	pathname        string
-	filename        string
-	module          string
-	lineno          int
-	funcName        string
-	created         int64
-	asctime         string
-	msecs           int64
-	relativeCreated int64
-	thread          int
-	threadName      string
-	process         int
-	message         string
-	timestamp       int64
+	level      Level
+	seqid      uint64
+	pathname   string
+	filename   string
+	module     string
+	lineno     int
+	funcName   string
+	thread     int
+	threadName string
+	process    int
+	message    string
+	time       time.Time
 }
 
 type field func(*logging, *log) interface{}
@@ -104,10 +97,7 @@ func genRuntime(l *log) {
 }
 
 func (logger *logging) lname(l *log) interface{} {
-	if l.name == "" {
-		l.name = logger.name
-	}
-	return l.name
+	return logger.name
 }
 
 func (logger *logging) nextSeqid(l *log) interface{} {
@@ -162,31 +152,28 @@ func (logger *logging) created(l *log) interface{} {
 }
 
 func (logger *logging) asctime(l *log) interface{} {
-	if l.asctime == "" {
-		l.asctime = time.Now().String()
+	if l.time.IsZero() {
+		l.time = time.Now()
 	}
-	return l.asctime
+	return l.time.String()
 }
 
 func (logger *logging) msecs(l *log) interface{} {
-	if l.msecs == 0 {
-		l.msecs = logger.startTime % 1000
-	}
-	return l.msecs
+	return logger.startTime % 1000
 }
 
 func (logger *logging) timestamp(l *log) interface{} {
-	if l.timestamp == 0 {
-		l.timestamp = time.Now().UnixNano()
+	if l.time.IsZero() {
+		l.time = time.Now()
 	}
-	return l.timestamp
+	return l.time.UnixNano()
 }
 
 func (logger *logging) relativeCreated(l *log) interface{} {
-	if l.relativeCreated == 0 {
-		l.relativeCreated = time.Now().UnixNano() - logger.startTime
+	if l.time.IsZero() {
+		l.time = time.Now()
 	}
-	return l.relativeCreated
+	return l.time.UnixNano() - logger.startTime
 }
 
 func (logger *logging) thread(l *log) interface{} {
