@@ -57,15 +57,12 @@ type levelPair struct {
 	value Level
 }
 
-// maximum size of level updating channel
-const maxAddLevelCacheSize = 10
-
 // level updating channel
 var levelPairs chan *levelPair
 
 // initial level updating channel and start watcher
 func init() {
-	levelPairs = make(chan *levelPair, maxAddLevelCacheSize)
+	levelPairs = make(chan *levelPair)
 
 	go watchLevelUpdate()
 }
