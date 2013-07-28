@@ -92,8 +92,18 @@ func genRuntime(l *log) {
 			}
 		}
 
+		// generate short function name
+		fname := runtime.FuncForPC(pc).Name()
+		fshort := fname
+		for i := len(fname) - 1; i > 0; i-- {
+			if fname[i] == '.' {
+				fshort = fname[i+1:]
+				break
+			}
+		}
+
 		l.pathname = file
-		l.funcName = runtime.FuncForPC(pc).Name()
+		l.funcName = fshort
 		l.filename = short
 		l.lineno = line
 	} else {
