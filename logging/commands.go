@@ -20,11 +20,12 @@ import (
 	"fmt"
 )
 
-// receive log request from the client, and start new goroute to record it
+// receive log request from the client. the log is a set of variables
 func (logger *logging) Logln(level Level, v ...interface{}) {
 	logger.logln(level, v...)
 }
 
+// receive log request from the client. the log has a format
 func (logger *logging) Logf(level Level, format string, v ...interface{}) {
 	logger.logf(level, format, v...)
 }
@@ -38,6 +39,7 @@ func (logger *logging) logln(level Level, v ...interface{}) {
 	}
 }
 
+// record log v... with level `level'. the log has a format
 func (logger *logging) logf(level Level, format string, v ...interface{}) {
 	if int(level) >= int(logger.level) {
 		message := fmt.Sprintf(format, v...)
@@ -46,13 +48,14 @@ func (logger *logging) logf(level Level, format string, v ...interface{}) {
 	}
 }
 
+// the function to print log to file, stdout, or others
 func (logger *logging) printLog(message string) {
 	logger.lock.Lock()
 	defer logger.lock.Unlock()
 	fmt.Fprintln(logger.out, message)
 }
 
-// other quick commands
+// other quick commands for different level
 func (logger *logging) Critical(v ...interface{}) {
 	logger.logln(CRITICAL, v...)
 }
