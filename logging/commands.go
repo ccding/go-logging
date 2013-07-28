@@ -22,11 +22,11 @@ import (
 
 // receive log request from the client, and start new goroute to record it
 func (logger *logging) Logln(level Level, v ...interface{}) {
-	go logger.logln(level, v...)
+	logger.logln(level, v...)
 }
 
 func (logger *logging) Logf(level Level, format string, v ...interface{}) {
-	go logger.logf(level, format, v...)
+	logger.logf(level, format, v...)
 }
 
 // record log v... with level `level'
@@ -35,7 +35,8 @@ func (logger *logging) logln(level Level, v ...interface{}) {
 		logger.lock.Lock()
 		defer logger.lock.Unlock()
 		message := fmt.Sprint(v...)
-		fmt.Fprintln(logger.out, logger.genLog(level, message))
+		message = logger.genLog(level, message)
+		go fmt.Fprintln(logger.out, message)
 	}
 }
 
@@ -44,39 +45,40 @@ func (logger *logging) logf(level Level, format string, v ...interface{}) {
 		logger.lock.Lock()
 		defer logger.lock.Unlock()
 		message := fmt.Sprintf(format, v...)
-		fmt.Fprintln(logger.out, logger.genLog(level, message))
+		message = logger.genLog(level, message)
+		go fmt.Fprintln(logger.out, message)
 	}
 }
 
 // other quick commands
 func (logger *logging) Critical(v ...interface{}) {
-	go logger.logln(CRITICAL, v...)
+	logger.logln(CRITICAL, v...)
 }
 
 func (logger *logging) Fatal(v ...interface{}) {
-	go logger.logln(CRITICAL, v...)
+	logger.logln(CRITICAL, v...)
 }
 
 func (logger *logging) Error(v ...interface{}) {
-	go logger.logln(ERROR, v...)
+	logger.logln(ERROR, v...)
 }
 
 func (logger *logging) Warn(v ...interface{}) {
-	go logger.logln(WARNING, v...)
+	logger.logln(WARNING, v...)
 }
 
 func (logger *logging) Warning(v ...interface{}) {
-	go logger.logln(WARNING, v...)
+	logger.logln(WARNING, v...)
 }
 
 func (logger *logging) Info(v ...interface{}) {
-	go logger.logln(INFO, v...)
+	logger.logln(INFO, v...)
 }
 
 func (logger *logging) Debug(v ...interface{}) {
-	go logger.logln(DEBUG, v...)
+	logger.logln(DEBUG, v...)
 }
 
 func (logger *logging) Log(v ...interface{}) {
-	go logger.logln(NOTSET, v...)
+	logger.logln(NOTSET, v...)
 }
