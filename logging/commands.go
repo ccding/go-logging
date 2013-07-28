@@ -20,18 +20,18 @@ func (logger *logging) Logf(level Level, format string, v ...interface{}) {
 
 // record log v... with level `level'
 func (logger *logging) logln(level Level, v ...interface{}) {
-	if int(level) >= int(logger.Level) {
+	if int(level) >= int(logger.level) {
 		logger.lock.Lock()
 		defer logger.lock.Unlock()
-		fmt.Fprintln(logger.Out, v...)
+		fmt.Fprintln(logger.out, v...)
 	}
 }
 
 func (logger *logging) logf(level Level, format string, v ...interface{}) {
-	if int(level) >= int(logger.Level) {
+	if int(level) >= int(logger.level) {
 		logger.lock.Lock()
 		defer logger.lock.Unlock()
-		fmt.Fprintf(logger.Out, format+"\n", v...)
+		fmt.Fprintf(logger.out, format+"\n", v...)
 	}
 }
 
