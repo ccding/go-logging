@@ -6,6 +6,7 @@
 package logging
 
 import (
+	"os"
 	"runtime"
 	"strconv"
 	"sync/atomic"
@@ -127,8 +128,9 @@ func (logger *logging) threadName() string {
 	return strconv.Itoa(int(GetGoId()))
 }
 
+// Process ID
 func (logger *logging) process() string {
-	return ""
+	return strconv.Itoa(os.Getpid())
 }
 
 func (logger *logging) message() string {
