@@ -17,6 +17,7 @@
 package logging
 
 import (
+	"fmt"
 	"strconv"
 	"testing"
 )
@@ -38,9 +39,10 @@ func TestGetGoId(t *testing.T) {
 func TestSeqid(t *testing.T) {
 	logger := BasicLogger("test")
 	for i := 0; i < 1000; i++ {
+		l := new(log)
 		name := strconv.Itoa(i + 1)
-		seq := logger.nextSeqid()
-		if seq != name {
+		seq := logger.nextSeqid(l)
+		if fmt.Sprintf("%d", seq) != name {
 			t.Errorf("%v, %v\n", seq, name)
 		}
 	}
@@ -50,8 +52,9 @@ func TestName(t *testing.T) {
 	for i := 0; i < 1000; i++ {
 		name := strconv.Itoa(i)
 		logger := BasicLogger(name)
-		if logger.Name() != name {
-			t.Errorf("%v, %v\n", logger.Name(), name)
+		l := new(log)
+		if logger.lname(l) != name {
+			t.Errorf("%v, %v\n", logger.lname(l), name)
 		}
 	}
 }
