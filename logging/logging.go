@@ -36,7 +36,7 @@ type logging struct {
 	format    string
 	out       io.Writer
 	lock      sync.Mutex
-	startTime int64
+	startTime time.Time
 	seqid     uint64
 }
 
@@ -79,7 +79,7 @@ func Logger(name string, level Level, format string, out io.Writer) *logging {
 
 // initialize the logger
 func (logger *logging) init() {
-	logger.startTime = time.Now().UnixNano()
+	logger.startTime = time.Now()
 }
 
 // get and set the configuration of the logger

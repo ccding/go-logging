@@ -148,7 +148,7 @@ func (logger *logging) funcName(l *log) interface{} {
 }
 
 func (logger *logging) created(l *log) interface{} {
-	return logger.startTime
+	return logger.startTime.UnixNano()
 }
 
 func (logger *logging) asctime(l *log) interface{} {
@@ -159,7 +159,7 @@ func (logger *logging) asctime(l *log) interface{} {
 }
 
 func (logger *logging) msecs(l *log) interface{} {
-	return logger.startTime % 1000
+	return logger.startTime.Nanosecond()
 }
 
 func (logger *logging) timestamp(l *log) interface{} {
@@ -173,7 +173,7 @@ func (logger *logging) relativeCreated(l *log) interface{} {
 	if l.time.IsZero() {
 		l.time = time.Now()
 	}
-	return l.time.UnixNano() - logger.startTime
+	return l.time.Sub(logger.startTime).Nanoseconds()
 }
 
 func (logger *logging) thread(l *log) interface{} {
