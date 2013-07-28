@@ -18,6 +18,7 @@ package logging
 
 type Level int
 
+// values of level
 const (
 	CRITICAL Level = 50
 	FATAL    Level = CRITICAL
@@ -29,6 +30,7 @@ const (
 	NOTSET   Level = 0
 )
 
+// the mapping from level to level name
 var levelNames = map[Level]string{
 	CRITICAL: "CRITICAL",
 	ERROR:    "ERROR",
@@ -38,6 +40,7 @@ var levelNames = map[Level]string{
 	NOTSET:   "NOTSET",
 }
 
+// the mapping from level name to level
 var levelValues = map[string]Level{
 	"CRITICAL": CRITICAL,
 	"ERROR":    ERROR,
@@ -48,37 +51,46 @@ var levelValues = map[string]Level{
 	"NOTSET":   NOTSET,
 }
 
+// leve pair, which is used to store in channel for level update
 type levelPair struct {
 	name  string
 	value Level
 }
 
+// maximum size of level updating channel
 const maxAddLevelCacheSize = 10
 
+// level updating channel
 var levelPairs chan *levelPair
 
+// initial level updating channel and start watcher
 func init() {
 	levelPairs = make(chan *levelPair, maxAddLevelCacheSize)
 
 	go watchLevelUpdate()
 }
 
+// cast level value to string
 func (level *Level) String() string {
 	return levelNames[*level]
 }
 
+// get level name from level value
 func GetLevelName(levelValue Level) string {
 	return levelNames[levelValue]
 }
 
+// get level value from level name
 func GetLevelValue(levelName string) Level {
 	return levelValues[levelName]
 }
 
+// add a new level
 func AddLevel(levelName string, levelValue Level) {
 	SetLevel(levelName, levelValue)
 }
 
+// update existing level
 func SetLevel(levelName string, levelValue Level) {
 	level := new(levelPair)
 	level.name = levelName
@@ -86,6 +98,7 @@ func SetLevel(levelName string, levelValue Level) {
 	levelPairs <- level
 }
 
+// watcher for updating the level updating
 func watchLevelUpdate() {
 	for {
 		level := <-levelPairs
