@@ -35,7 +35,11 @@ func (logger *logging) logln(level Level, v ...interface{}) {
 	if int(level) >= int(logger.level) {
 		message := fmt.Sprint(v...)
 		message = logger.genLog(level, message)
-		go logger.printLog(message)
+		if logger.sync {
+			logger.printLog(message)
+		} else {
+			go logger.printLog(message)
+		}
 	}
 }
 
@@ -44,7 +48,11 @@ func (logger *logging) logf(level Level, format string, v ...interface{}) {
 	if int(level) >= int(logger.level) {
 		message := fmt.Sprintf(format, v...)
 		message = logger.genLog(level, message)
-		go logger.printLog(message)
+		if logger.sync {
+			logger.printLog(message)
+		} else {
+			go logger.printLog(message)
+		}
 	}
 }
 

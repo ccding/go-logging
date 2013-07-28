@@ -38,11 +38,12 @@ type logging struct {
 	lock      sync.Mutex
 	startTime time.Time
 	seqid     uint64
+	sync      bool
 }
 
 // create a new logger with simple configuration
 func SimpleLogger(name string) *logging {
-	return Logger(name, WARNING, BasicFormat, os.Stdout)
+	return Logger(name, WARNING, BasicFormat, os.Stdout, true)
 }
 
 // create a new logger with basic configuration
@@ -52,26 +53,27 @@ func BasicLogger(name string) *logging {
 
 // create a new logger with simple configuration
 func RichLogger(name string) *logging {
-	return FileLogger(name, NOTSET, RichFormat, defaultFileName)
+	return FileLogger(name, NOTSET, RichFormat, defaultFileName, true)
 }
 
 // create a new logger with file output
-func FileLogger(name string, level Level, format string, file string) *logging {
+func FileLogger(name string, level Level, format string, file string, sync bool) *logging {
 	out, err := os.Create(file)
 	if err != nil {
 		panic(err)
 	}
-	return Logger(name, level, format, out)
+	return Logger(name, level, format, out, sync)
 }
 
 // create a new logger
-func Logger(name string, level Level, format string, out io.Writer) *logging {
+func Logger(name string, level Level, format string, out io.Writer, sync bool) *logging {
 	logger := new(logging)
 	logger.name = name
 	logger.level = level
 	logger.format = format
 	logger.out = out
 	logger.seqid = 0
+	logger.sync = sync
 
 	logger.init()
 	return logger
