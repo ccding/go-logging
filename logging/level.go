@@ -16,8 +16,6 @@
 //
 package logging
 
-import ()
-
 type Level int
 
 const (
@@ -57,9 +55,7 @@ type levelPair struct {
 
 const maxAddLevelCacheSize = 10
 
-var (
-	levelPairs chan *levelPair
-)
+var levelPairs chan *levelPair
 
 func init() {
 	levelPairs = make(chan *levelPair, maxAddLevelCacheSize)

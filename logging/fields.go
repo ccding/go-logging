@@ -74,9 +74,6 @@ const errString = "???"
 // GetGoId returns the id of goroutine, which is defined in ./get_go_id.c
 func GetGoId() int32
 
-func init() {
-}
-
 // generate the runtime information, including pathname, function name,
 // filename, line number.
 func genRuntime(l *log) {
