@@ -35,7 +35,7 @@ func (logger *logging) logln(level Level, v ...interface{}) {
 		logger.lock.Lock()
 		defer logger.lock.Unlock()
 		message := fmt.Sprint(v...)
-		fmt.Fprintln(logger.out, logger.genLog(message))
+		fmt.Fprintln(logger.out, logger.genLog(level, message))
 	}
 }
 
@@ -44,7 +44,7 @@ func (logger *logging) logf(level Level, format string, v ...interface{}) {
 		logger.lock.Lock()
 		defer logger.lock.Unlock()
 		message := fmt.Sprintf(format, v...)
-		fmt.Fprintln(logger.out, logger.genLog(message))
+		fmt.Fprintln(logger.out, logger.genLog(level, message))
 	}
 }
 

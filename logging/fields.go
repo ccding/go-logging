@@ -24,7 +24,29 @@ import (
 	"time"
 )
 
-type field func(*logging) interface{}
+type log struct {
+	level           Level
+	name            string
+	nextSeqid       uint64
+	levelno         int
+	levelname       string
+	pathname        string
+	filename        string
+	module          string
+	lineno          int
+	funcName        string
+	created         int64
+	asctime         string
+	msecs           int64
+	relativeCreated int64
+	thread          int
+	threadName      string
+	process         int
+	message         string
+	timestamp       int64
+}
+
+type field func(*logging, *log) interface{}
 
 var fields = map[string]field{
 	"name":            (*logging).lname,
@@ -44,6 +66,7 @@ var fields = map[string]field{
 	"threadName":      (*logging).threadName,
 	"process":         (*logging).process,
 	"message":         (*logging).message,
+	"timestamp":       (*logging).timestamp,
 }
 
 // the calling depth of these function, which is used to call the
@@ -58,99 +81,134 @@ func GetGoId() int32
 func init() {
 }
 
-func (logger *logging) lname() interface{} {
+// generate the runtime information, including pathname, function name,
+// filename, line number.
+func genRuntime(l *log) {
+	pc, file, line, ok := runtime.Caller(calldepth)
+	if ok {
+		// generate short filename
+		short := file
+		for i := len(file) - 1; i > 0; i-- {
+			if file[i] == '/' {
+				short = file[i+1:]
+				break
+			}
+		}
+
+		l.pathname = file
+		l.funcName = runtime.FuncForPC(pc).Name()
+		l.filename = short
+		l.lineno = line
+	} else {
+		l.pathname = errorString
+		l.funcName = errorString
+		l.filename = errorString
+		l.lineno = 0
+	}
+}
+
+func (logger *logging) lname(l *log) interface{} {
 	return logger.name
 }
 
-func (logger *logging) nextSeqid() interface{} {
+func (logger *logging) nextSeqid(l *log) interface{} {
 	return atomic.AddUint64(&(logger.seqid), 1)
 }
 
-func (logger *logging) levelno() interface{} {
-	return int(logger.level)
+func (logger *logging) levelno(l *log) interface{} {
+	return int(l.level)
 }
 
-func (logger *logging) levelname() interface{} {
-	return levelNames[logger.level]
+func (logger *logging) levelname(l *log) interface{} {
+	return levelNames[l.level]
 }
 
-func (logger *logging) pathname() interface{} {
-	_, file, _, ok := runtime.Caller(calldepth)
-	if !ok {
-		file = errorString
+func (logger *logging) pathname(l *log) interface{} {
+	if l.pathname == "" {
+		genRuntime(l)
 	}
-	return file
+	return l.pathname
 }
 
-func (logger *logging) filename() interface{} {
-	_, file, _, ok := runtime.Caller(calldepth)
-	if !ok {
-		file = errorString
+func (logger *logging) filename(l *log) interface{} {
+	if l.filename == "" {
+		genRuntime(l)
 	}
-	short := file
-	for i := len(file) - 1; i > 0; i-- {
-		if file[i] == '/' {
-			short = file[i+1:]
-			break
-		}
-	}
-	file = short
-	return file
+	return l.filename
 }
 
-func (logger *logging) module() interface{} {
+func (logger *logging) module(l *log) interface{} {
 	return ""
 }
 
-func (logger *logging) lineno() interface{} {
-	_, _, line, ok := runtime.Caller(calldepth)
-	if !ok {
-		line = 0
+func (logger *logging) lineno(l *log) interface{} {
+	if l.lineno == 0 {
+		genRuntime(l)
 	}
-	return line
+	return l.lineno
 }
 
-func (logger *logging) funcName() interface{} {
-	pc, _, _, ok := runtime.Caller(calldepth)
-	if !ok {
-		return errorString
+func (logger *logging) funcName(l *log) interface{} {
+	if l.funcName == "" {
+		genRuntime(l)
 	}
-	return runtime.FuncForPC(pc).Name()
+	return l.funcName
 }
 
-func (logger *logging) created() interface{} {
+func (logger *logging) created(l *log) interface{} {
 	return logger.startTime
 }
 
-func (logger *logging) asctime() interface{} {
-	return time.Now().String()
+func (logger *logging) asctime(l *log) interface{} {
+	if l.asctime == "" {
+		l.asctime = time.Now().String()
+	}
+	return l.asctime
 }
 
-func (logger *logging) msecs() interface{} {
-	return logger.startTime % 1000
+func (logger *logging) msecs(l *log) interface{} {
+	if l.msecs == 0 {
+		l.msecs = logger.startTime % 1000
+	}
+	return l.msecs
 }
 
-func (logger *logging) timestamp() interface{} {
-	return time.Now().UnixNano()
+func (logger *logging) timestamp(l *log) interface{} {
+	if l.timestamp == 0 {
+		l.timestamp = time.Now().UnixNano()
+	}
+	return l.timestamp
 }
 
-func (logger *logging) relativeCreated() interface{} {
-	return time.Now().UnixNano() - logger.startTime
+func (logger *logging) relativeCreated(l *log) interface{} {
+	if l.relativeCreated == 0 {
+		l.relativeCreated = time.Now().UnixNano() - logger.startTime
+	}
+	return l.relativeCreated
 }
 
-func (logger *logging) thread() interface{} {
-	return int(GetGoId())
+func (logger *logging) thread(l *log) interface{} {
+	if l.thread == 0 {
+		l.thread = int(GetGoId())
+	}
+	return l.thread
 }
 
-func (logger *logging) threadName() interface{} {
-	return fmt.Sprintf("Thread-%d", GetGoId())
+func (logger *logging) threadName(l *log) interface{} {
+	if l.threadName == "" {
+		l.threadName = fmt.Sprintf("Thread-%d", GetGoId())
+	}
+	return l.threadName
 }
 
 // Process ID
-func (logger *logging) process() interface{} {
-	return os.Getpid()
+func (logger *logging) process(l *log) interface{} {
+	if l.process == 0 {
+		l.process = os.Getpid()
+	}
+	return l.process
 }
 
-func (logger *logging) message() interface{} {
-	return ""
+func (logger *logging) message(l *log) interface{} {
+	return l.message
 }

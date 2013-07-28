@@ -27,15 +27,18 @@ const (
 	richFormat  = "%s [%s] %s - %d - %s:%s:%s:%d - %s\nname, levelname, asctime, thread, module, filename, funcName, %lineno, message"
 )
 
-func (logger *logging) genLog(message string) string {
+func (logger *logging) genLog(level Level, message string) string {
 	format := strings.Split(logger.format, "\n")
 	if len(format) != 2 {
 		return "logging format error"
 	}
 	args := strings.Split(format[1], ",")
 	fs := make([]interface{}, len(args))
+	l := new(log)
+	l.message = message
+	l.level = level
 	for k, v := range args {
-		fs[k] = fields[strings.TrimSpace(v)](logger)
+		fs[k] = fields[strings.TrimSpace(v)](logger, l)
 	}
 	return fmt.Sprintf(format[0], fs...)
 }
