@@ -34,7 +34,8 @@ func (logger *logging) logln(level Level, v ...interface{}) {
 	if int(level) >= int(logger.level) {
 		logger.lock.Lock()
 		defer logger.lock.Unlock()
-		fmt.Fprintln(logger.out, v...)
+		message := fmt.Sprint(v...)
+		fmt.Fprintln(logger.out, logger.genLog(message))
 	}
 }
 
@@ -42,7 +43,8 @@ func (logger *logging) logf(level Level, format string, v ...interface{}) {
 	if int(level) >= int(logger.level) {
 		logger.lock.Lock()
 		defer logger.lock.Unlock()
-		fmt.Fprintf(logger.out, format+"\n", v...)
+		message := fmt.Sprintf(format, v...)
+		fmt.Fprintln(logger.out, logger.genLog(message))
 	}
 }
 
