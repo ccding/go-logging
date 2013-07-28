@@ -104,7 +104,10 @@ func genRuntime(l *log) {
 }
 
 func (logger *logging) lname(l *log) interface{} {
-	return logger.name
+	if l.name == "" {
+		l.name = logger.name
+	}
+	return l.name
 }
 
 func (logger *logging) nextSeqid(l *log) interface{} {
