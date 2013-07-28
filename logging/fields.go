@@ -19,6 +19,7 @@ package logging
 import (
 	"fmt"
 	"os"
+	"path"
 	"runtime"
 	"sync/atomic"
 	"time"
@@ -81,13 +82,6 @@ func genRuntime(l *log) {
 	pc, file, line, ok := runtime.Caller(calldepth)
 	if ok {
 		// generate short filename
-		short := file
-		for i := len(file) - 1; i > 0; i-- {
-			if file[i] == '/' {
-				short = file[i+1:]
-				break
-			}
-		}
 
 		// generate short function name
 		fname := runtime.FuncForPC(pc).Name()
@@ -101,7 +95,7 @@ func genRuntime(l *log) {
 
 		l.pathname = file
 		l.funcName = fshort
-		l.filename = short
+		l.filename = path.Base(file)
 		l.lineno = line
 	} else {
 		l.pathname = errString
