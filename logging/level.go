@@ -18,10 +18,10 @@ package logging
 
 import "sync"
 
-// the type of level
+// Level is the type of level.
 type Level int
 
-// values of level
+// Values of level
 const (
 	CRITICAL Level = 50
 	FATAL    Level = CRITICAL
@@ -33,7 +33,7 @@ const (
 	NOTSET   Level = 0
 )
 
-// the mapping from level to level name
+// The mapping from level to level name
 var levelNames = map[Level]string{
 	CRITICAL: "CRITICAL",
 	ERROR:    "ERROR",
@@ -43,7 +43,7 @@ var levelNames = map[Level]string{
 	NOTSET:   "NOTSET",
 }
 
-// the mapping from level name to level
+// The mapping from level name to level
 var levelValues = map[string]Level{
 	"CRITICAL": CRITICAL,
 	"ERROR":    ERROR,

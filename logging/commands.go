@@ -65,7 +65,7 @@ func (logger *Logger) printLog(message string) {
 	fmt.Fprintln(logger.out, message)
 }
 
-// other quick commands for different level
+// Other quick commands for different level
 
 func (logger *Logger) Critical(v ...interface{}) {
 	logger.logln(CRITICAL, v...)

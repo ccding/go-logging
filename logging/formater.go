@@ -27,7 +27,7 @@ const (
 	RichFormat  = "%s [%6s] %d %30s - %d - %s:%s:%d - %s\n name, levelname, seqid, asctime, thread, filename, funcName, lineno, message"
 )
 
-// generate log string from the format setting
+// genLog generates log string from the format setting.
 func (logger *Logger) genLog(level Level, message string) string {
 	format := strings.Split(logger.format, "\n")
 	if len(format) != 2 {

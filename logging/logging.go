@@ -23,13 +23,13 @@ import (
 	"time"
 )
 
-// pre-defined formats
+// Pre-defined formats
 const (
 	defaultFileName = "logging.log"
 	configFileName  = "logging.conf"
 )
 
-// the logging struct
+// Logger is the logging struct.
 type Logger struct {
 	// Be careful of the alignment issue of the variable seqid because it
 	// uses the sync/atomic.AddUint64() operation. If the alignment is
@@ -50,7 +50,7 @@ func SimpleLogger(name string) *Logger {
 	return createLogger(name, WARNING, BasicFormat, os.Stdout, true)
 }
 
-// BasieLogger creates a new logger with basic configuration.
+// BasicLogger creates a new logger with basic configuration.
 func BasicLogger(name string) *Logger {
 	return SimpleLogger(name)
 }
@@ -83,12 +83,12 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 	return logger
 }
 
-// initialize the logger
+// Initialize the logger
 func (logger *Logger) init() {
 	logger.startTime = time.Now()
 }
 
-// get and set the configuration of the logger
+// Get and set the configuration of the logger
 
 func (logger *Logger) Name() string {
 	return logger.name
