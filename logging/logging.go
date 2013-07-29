@@ -60,6 +60,8 @@ type Logger struct {
 	sync      bool
 	queue     chan string
 	flush     chan bool
+	quit      chan bool
+	fd        *os.File
 }
 
 // SimpleLogger creates a new logger with simple configuration.
@@ -83,7 +85,11 @@ func FileLogger(name string, level Level, format string, file string, sync bool)
 	if err != nil {
 		panic(err)
 	}
-	return createLogger(name, level, format, out, sync)
+	logger, err := createLogger(name, level, format, out, sync)
+	if err == nil {
+		logger.fd = out
+	}
+	return logger, err
 }
 
 // createLogger create a new logger
@@ -103,7 +109,9 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 	logger.sync = sync
 	logger.queue = make(chan string)
 	logger.flush = make(chan bool)
+	logger.quit = make(chan bool)
 	logger.startTime = time.Now()
+	logger.fd = nil
 
 	// start watcher and timer
 	go logger.watcher()
@@ -112,6 +120,23 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 	return logger, nil
 }
 
+// Destroy sends quit signal to timer and watcher, and all the other destroy
+// behaviors will be called by watcher.
+func (logger *Logger) Destroy() {
+	// quit timer and watcher
+	logger.quit <- true
+	logger.quit <- true
+}
+
+// destroy cleans the logger and releases all the resources. This function
+// will be called by watcher.
+func (logger *Logger) destroy() {
+	if logger.fd != nil {
+		logger.fd.Close()
+	}
+}
+
+// Flush the writer
 func (logger *Logger) Flush() {
 	logger.flush <- true
 }

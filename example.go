@@ -33,4 +33,5 @@ func main() {
 	logger.Debug("this is a test from debug")
 	logger.Notset("orz", time.Now().UnixNano())
 	logger.Flush()
+	logger.Destroy()
 }
