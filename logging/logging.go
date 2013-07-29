@@ -53,6 +53,7 @@ type Logger struct {
 	name      string
 	level     Level
 	format    string
+	fargs     []string
 	out       io.Writer
 	lock      sync.Mutex
 	startTime time.Time
@@ -88,32 +89,37 @@ func FileLogger(name string, level Level, format string, file string, sync bool)
 // createLogger create a new logger
 func createLogger(name string, level Level, format string, out io.Writer, sync bool) (*Logger, error) {
 	logger := new(Logger)
+
+	// partially check the legality of format
+	fts := strings.Split(format, "\n")
+	if len(fts) != 2 {
+		return logger, errors.New("logging format error")
+	}
+	logger.format = fts[0]
+	logger.fargs = strings.Split(fts[1], ",")
+	for k, v := range logger.fargs {
+		logger.fargs[k] = strings.TrimSpace(v)
+	}
+
+	// asign values to logger
 	logger.name = name
 	logger.level = level
-	logger.format = format
 	logger.out = out
 	logger.seqid = 0
 	logger.sync = sync
 	logger.queue = make(chan string)
 	logger.flush = make(chan bool)
-
-	err := logger.init()
-	return logger, err
-}
-
-// Initialize the logger
-func (logger *Logger) init() error {
 	logger.startTime = time.Now()
-
-	// partially check the legality of format
-	format := strings.Split(logger.format, "\n")
-	if len(format) != 2 {
-		return errors.New("logging format error")
-	}
 
 	// start watcher and timer
 	go logger.watcher()
 	go logger.timer()
+
+	return logger, nil
+}
+
+// Initialize the logger
+func (logger *Logger) init() error {
 
 	return nil
 }

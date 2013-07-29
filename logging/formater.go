@@ -16,10 +16,7 @@
 //
 package logging
 
-import (
-	"fmt"
-	"strings"
-)
+import "fmt"
 
 // pre-defined formats
 const (
@@ -29,14 +26,12 @@ const (
 
 // genLog generates log string from the format setting.
 func (logger *Logger) genLog(level Level, message string) string {
-	format := strings.Split(logger.format, "\n")
-	args := strings.Split(format[1], ",")
-	fs := make([]interface{}, len(args))
+	fs := make([]interface{}, len(logger.fargs))
 	r := new(record)
 	r.message = message
 	r.level = level
-	for k, v := range args {
-		fs[k] = fields[strings.TrimSpace(v)](logger, r)
+	for k, v := range logger.fargs {
+		fs[k] = fields[v](logger, r)
 	}
-	return fmt.Sprintf(format[0], fs...)
+	return fmt.Sprintf(logger.format, fs...)
 }
