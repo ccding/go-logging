@@ -50,19 +50,11 @@ func (logger *Logger) watchLog() {
 	}
 }
 
-// Logln receives log request from the client. The request includes a set of
-// variables.
-func (logger *Logger) Log(level Level, v ...interface{}) {
-	// Don't delete this calling. The calling is used to keep the same
-	// calldepth for all the logging functions. The calldepth is used to
-	// get runtime information such as line number, function name, etc.
-	logger.log(level, v...)
-}
-
-// Logf receives log request from the client. The request has a string
-// parameter to describe the format of output.
-func (logger *Logger) Logf(level Level, format string, v ...interface{}) {
-	logger.logf(level, format, v...)
+// printLog is to print log to file, stdout, or others.
+func (logger *Logger) printLog(message string) {
+	logger.lock.Lock()
+	defer logger.lock.Unlock()
+	fmt.Fprintln(logger.out, message)
 }
 
 // log records log v... with level `level'.
@@ -91,11 +83,19 @@ func (logger *Logger) logf(level Level, format string, v ...interface{}) {
 	}
 }
 
-// printLog is to print log to file, stdout, or others.
-func (logger *Logger) printLog(message string) {
-	logger.lock.Lock()
-	defer logger.lock.Unlock()
-	fmt.Fprintln(logger.out, message)
+// Logln receives log request from the client. The request includes a set of
+// variables.
+func (logger *Logger) Log(level Level, v ...interface{}) {
+	// Don't delete this calling. The calling is used to keep the same
+	// calldepth for all the logging functions. The calldepth is used to
+	// get runtime information such as line number, function name, etc.
+	logger.log(level, v...)
+}
+
+// Logf receives log request from the client. The request has a string
+// parameter to describe the format of output.
+func (logger *Logger) Logf(level Level, format string, v ...interface{}) {
+	logger.logf(level, format, v...)
 }
 
 // Other quick commands for different level
