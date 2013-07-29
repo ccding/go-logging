@@ -31,13 +31,17 @@ const (
 
 // the logging struct
 type Logger struct {
+	// Be careful of the alignment issue of the variable seqid because it
+	// uses the sync/atomic.AddUint64() operation. If the alignment is
+	// wrong, it will cause a panic. To solve the alignment issue in an
+	// easy way, we put seqid to the beginning of the structure.
+	seqid     uint64
 	name      string
 	level     Level
 	format    string
 	out       io.Writer
 	lock      sync.Mutex
 	startTime time.Time
-	seqid     uint64
 	sync      bool
 }
 
