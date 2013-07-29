@@ -21,10 +21,10 @@ import (
 	"time"
 )
 
-func TestLogging(t *testing.T) {
+func BenchmarkLogging(b *testing.B) {
 	logger := RichLogger("main")
 	logger.SetLevel(NOTSET)
-	for i := 0; i < 1e4; i++ {
+	for i := 0; i < b.N; i++ {
 		logger.Error("this is a test from error")
 		logger.Debug("this is a test from debug")
 		logger.Notset("orz", time.Now().UnixNano())
