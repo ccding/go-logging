@@ -17,6 +17,8 @@
 package logging
 
 import (
+	"fmt"
+	"os"
 	"testing"
 	"time"
 )
@@ -83,4 +85,16 @@ func BenchmarkBasicAsync(b *testing.B) {
 	}
 	logger.Flush()
 	logger.Destroy()
+}
+
+func BenchmarkPrintln(b *testing.B) {
+	out, _ := os.Create("logging.log")
+	for i := 0; i < b.N; i++ {
+		fmt.Fprintln(out, "this is a test from error")
+		fmt.Fprintln(out, "this is a test from debug")
+		fmt.Fprintln(out, "orz", time.Now().UnixNano())
+		fmt.Fprintln(out, "this is a test from error")
+		fmt.Fprintln(out, "this is a test from debug")
+		fmt.Fprintln(out, "orz", time.Now().UnixNano())
+	}
 }
