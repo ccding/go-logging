@@ -23,6 +23,9 @@ import (
 // Logln receives log request from the client. The request includes a set of
 // variables.
 func (logger *Logger) Log(level Level, v ...interface{}) {
+	// Don't delete this calling. The calling is used to keep the same
+	// calldepth for all the logging functions. The calldepth is used to
+	// get runtime information such as line number, function name, etc.
 	logger.logln(level, v...)
 }
 
