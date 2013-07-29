@@ -21,9 +21,10 @@ import (
 	"time"
 )
 
-func BenchmarkLogging(b *testing.B) {
+func BenchmarkSync(b *testing.B) {
 	logger := RichLogger("main")
 	logger.SetLevel(NOTSET)
+	logger.SetSync(true)
 	for i := 0; i < b.N; i++ {
 		logger.Error("this is a test from error")
 		logger.Debug("this is a test from debug")
@@ -32,4 +33,20 @@ func BenchmarkLogging(b *testing.B) {
 		logger.Debug("this is a test from debug")
 		logger.Notset("orz", time.Now().UnixNano())
 	}
+	logger.Flush()
+}
+
+func BenchmarkAsync(b *testing.B) {
+	logger := RichLogger("main")
+	logger.SetLevel(NOTSET)
+	logger.SetSync(false)
+	for i := 0; i < b.N; i++ {
+		logger.Error("this is a test from error")
+		logger.Debug("this is a test from debug")
+		logger.Notset("orz", time.Now().UnixNano())
+		logger.Error("this is a test from error")
+		logger.Debug("this is a test from debug")
+		logger.Notset("orz", time.Now().UnixNano())
+	}
+	logger.Flush()
 }

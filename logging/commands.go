@@ -17,8 +17,27 @@
 package logging
 
 import (
+	"bytes"
 	"fmt"
 )
+
+func (logger *Logger) watchLog() {
+	var buf bytes.Buffer
+	for true {
+		for i := 0; i < 1000; i++ {
+			select {
+			case msg := <-logger.queue:
+				fmt.Fprintln(&buf, msg)
+			case <-logger.flush:
+				logger.out.Write(buf.Bytes())
+				buf.Reset()
+
+			}
+		}
+		logger.out.Write(buf.Bytes())
+		buf.Reset()
+	}
+}
 
 // Logln receives log request from the client. The request includes a set of
 // variables.
@@ -43,7 +62,7 @@ func (logger *Logger) log(level Level, v ...interface{}) {
 		if logger.sync {
 			logger.printLog(message)
 		} else {
-			go logger.printLog(message)
+			logger.queue <- message
 		}
 	}
 }
@@ -56,7 +75,7 @@ func (logger *Logger) logf(level Level, format string, v ...interface{}) {
 		if logger.sync {
 			logger.printLog(message)
 		} else {
-			go logger.printLog(message)
+			logger.queue <- message
 		}
 	}
 }
