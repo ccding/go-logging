@@ -16,6 +16,8 @@
 //
 package logging
 
+import "sync"
+
 type Level int
 
 // values of level
@@ -51,21 +53,7 @@ var levelValues = map[string]Level{
 	"NOTSET":   NOTSET,
 }
 
-// leve pair, which is used to store in channel for level update
-type levelPair struct {
-	name  string
-	value Level
-}
-
-// level updating channel
-var levelPairs chan *levelPair
-
-// initial level updating channel and start watcher
-func init() {
-	levelPairs = make(chan *levelPair)
-
-	go watchLevelUpdate()
-}
+var levelLock sync.Mutex
 
 // cast level value to string
 func (level *Level) String() string {
@@ -89,17 +77,8 @@ func AddLevel(levelName string, levelValue Level) {
 
 // update existing level
 func SetLevel(levelName string, levelValue Level) {
-	level := new(levelPair)
-	level.name = levelName
-	level.value = levelValue
-	levelPairs <- level
-}
-
-// watcher for updating the level updating
-func watchLevelUpdate() {
-	for {
-		level := <-levelPairs
-		levelValues[level.name] = level.value
-		levelNames[level.value] = level.name
-	}
+	levelLock.Lock()
+	defer levelLock.Unlock()
+	levelValues[levelName] = levelValue
+	levelNames[levelValue] = levelName
 }
