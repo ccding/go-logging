@@ -25,7 +25,7 @@ import (
 // timer generate flush signal to the logger.flush channel, which makes
 // watchLog be able to write logs to output periodically.
 func (logger *Logger) timer() {
-	for true {
+	for {
 		time.Sleep(time.Second / 10)
 		logger.flush <- true
 	}
@@ -34,7 +34,7 @@ func (logger *Logger) timer() {
 // watcher watches the logger.queue channel, and writes the logs to output
 func (logger *Logger) watcher() {
 	var buf bytes.Buffer
-	for true {
+	for {
 		for i := 0; i < 1000; i++ {
 			select {
 			case msg := <-logger.queue:
