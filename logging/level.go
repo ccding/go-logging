@@ -18,6 +18,7 @@ package logging
 
 import "sync"
 
+// the type of level
 type Level int
 
 // values of level
@@ -55,27 +56,27 @@ var levelValues = map[string]Level{
 
 var levelLock sync.Mutex
 
-// cast level value to string
+// String function casts level value to string
 func (level *Level) String() string {
 	return levelNames[*level]
 }
 
-// get level name from level value
+// GetLevelName lets users be able to get level name from level value.
 func GetLevelName(levelValue Level) string {
 	return levelNames[levelValue]
 }
 
-// get level value from level name
+// GetLevelValue lets users be able to get level value from level name.
 func GetLevelValue(levelName string) Level {
 	return levelValues[levelName]
 }
 
-// add a new level
+// AddLevel adds a new level to the level list.
 func AddLevel(levelName string, levelValue Level) {
 	SetLevel(levelName, levelValue)
 }
 
-// update existing level
+// SetLevel updates existing levels.
 func SetLevel(levelName string, levelValue Level) {
 	levelLock.Lock()
 	defer levelLock.Unlock()
