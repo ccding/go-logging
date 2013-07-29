@@ -50,3 +50,33 @@ func BenchmarkAsync(b *testing.B) {
 	}
 	logger.Flush()
 }
+
+func BenchmarkBasicSync(b *testing.B) {
+	logger, _ := BasicLogger("main")
+	logger.SetLevel(NOTSET)
+	logger.SetSync(true)
+	for i := 0; i < b.N; i++ {
+		logger.Error("this is a test from error")
+		logger.Debug("this is a test from debug")
+		logger.Notset("orz", time.Now().UnixNano())
+		logger.Error("this is a test from error")
+		logger.Debug("this is a test from debug")
+		logger.Notset("orz", time.Now().UnixNano())
+	}
+	logger.Flush()
+}
+
+func BenchmarkBasicAsync(b *testing.B) {
+	logger, _ := BasicLogger("main")
+	logger.SetLevel(NOTSET)
+	logger.SetSync(false)
+	for i := 0; i < b.N; i++ {
+		logger.Error("this is a test from error")
+		logger.Debug("this is a test from debug")
+		logger.Notset("orz", time.Now().UnixNano())
+		logger.Error("this is a test from error")
+		logger.Debug("this is a test from debug")
+		logger.Notset("orz", time.Now().UnixNano())
+	}
+	logger.Flush()
+}
