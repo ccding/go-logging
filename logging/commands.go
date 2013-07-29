@@ -27,7 +27,11 @@ import (
 func (logger *Logger) timer() {
 	for {
 		time.Sleep(time.Second / 10)
-		logger.flush <- true
+		select {
+		case <-logger.quit:
+			return
+		case logger.flush <- true:
+		}
 	}
 }
 
@@ -42,8 +46,24 @@ func (logger *Logger) watcher() {
 			case <-logger.flush:
 				logger.out.Write(buf.Bytes())
 				buf.Reset()
-
+			case <-logger.quit:
+				// If quit signal received, cleans the channel
+				// and writes all of them to io.Writer. It
+				// calls destroy() finally to clean the
+				// logger.
+				for {
+					select {
+					case msg := <-logger.queue:
+						fmt.Fprintln(&buf, msg)
+					default:
+						logger.out.Write(buf.Bytes())
+						buf.Reset()
+						logger.destroy()
+						return
+					}
+				}
 			}
+
 		}
 		logger.out.Write(buf.Bytes())
 		buf.Reset()

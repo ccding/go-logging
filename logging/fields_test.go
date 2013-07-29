@@ -46,6 +46,7 @@ func TestSeqid(t *testing.T) {
 			t.Errorf("%v, %v\n", seq, name)
 		}
 	}
+	logger.Destroy()
 }
 
 func TestName(t *testing.T) {
@@ -55,4 +56,5 @@ func TestName(t *testing.T) {
 	if logger.lname(r) != name {
 		t.Errorf("%v, %v\n", logger.lname(r), name)
 	}
+	logger.Destroy()
 }

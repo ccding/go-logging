@@ -34,6 +34,7 @@ func BenchmarkSync(b *testing.B) {
 		logger.Notset("orz", time.Now().UnixNano())
 	}
 	logger.Flush()
+	logger.Destroy()
 }
 
 func BenchmarkAsync(b *testing.B) {
@@ -49,6 +50,7 @@ func BenchmarkAsync(b *testing.B) {
 		logger.Notset("orz", time.Now().UnixNano())
 	}
 	logger.Flush()
+	logger.Destroy()
 }
 
 func BenchmarkBasicSync(b *testing.B) {
@@ -64,6 +66,7 @@ func BenchmarkBasicSync(b *testing.B) {
 		logger.Notset("orz", time.Now().UnixNano())
 	}
 	logger.Flush()
+	logger.Destroy()
 }
 
 func BenchmarkBasicAsync(b *testing.B) {
@@ -79,4 +82,5 @@ func BenchmarkBasicAsync(b *testing.B) {
 		logger.Notset("orz", time.Now().UnixNano())
 	}
 	logger.Flush()
+	logger.Destroy()
 }
