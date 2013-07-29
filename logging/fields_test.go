@@ -25,11 +25,11 @@ import (
 func empty() {
 }
 
-func TestGetGoId(t *testing.T) {
+func TestGetGoID(t *testing.T) {
 	for i := 0; i < 1000; i++ {
-		goid := int(GetGoId())
+		goid := int(GetGoID())
 		go empty()
-		goid2 := int(GetGoId())
+		goid2 := int(GetGoID())
 		if goid != goid2 {
 			t.Errorf("%v, %v\n", goid, goid2)
 		}
