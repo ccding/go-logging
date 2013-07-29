@@ -28,7 +28,7 @@ const (
 )
 
 // generate log string from the format setting
-func (logger *logging) genLog(level Level, message string) string {
+func (logger *Logger) genLog(level Level, message string) string {
 	format := strings.Split(logger.format, "\n")
 	if len(format) != 2 {
 		return "logging format error"

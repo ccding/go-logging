@@ -42,25 +42,25 @@ type record struct {
 }
 
 // this variable maps fields in format to relavent function signatures
-var fields = map[string]func(*logging, *record) interface{}{
-	"name":            (*logging).lname,
-	"seqid":           (*logging).nextSeqid,
-	"levelno":         (*logging).levelno,
-	"levelname":       (*logging).levelname,
-	"pathname":        (*logging).pathname,
-	"filename":        (*logging).filename,
-	"module":          (*logging).module,
-	"lineno":          (*logging).lineno,
-	"funcName":        (*logging).funcName,
-	"created":         (*logging).created,
-	"asctime":         (*logging).asctime,
-	"msecs":           (*logging).msecs,
-	"relativeCreated": (*logging).relativeCreated,
-	"thread":          (*logging).thread,
-	"threadName":      (*logging).threadName,
-	"process":         (*logging).process,
-	"message":         (*logging).message,
-	"timestamp":       (*logging).timestamp,
+var fields = map[string]func(*Logger, *record) interface{}{
+	"name":            (*Logger).lname,
+	"seqid":           (*Logger).nextSeqid,
+	"levelno":         (*Logger).levelno,
+	"levelname":       (*Logger).levelname,
+	"pathname":        (*Logger).pathname,
+	"filename":        (*Logger).filename,
+	"module":          (*Logger).module,
+	"lineno":          (*Logger).lineno,
+	"funcName":        (*Logger).funcName,
+	"created":         (*Logger).created,
+	"asctime":         (*Logger).asctime,
+	"msecs":           (*Logger).msecs,
+	"relativeCreated": (*Logger).relativeCreated,
+	"thread":          (*Logger).thread,
+	"threadName":      (*Logger).threadName,
+	"process":         (*Logger).process,
+	"message":         (*Logger).message,
+	"timestamp":       (*Logger).timestamp,
 }
 
 // if it fails to get some fields with string type, these fields are set to
@@ -102,12 +102,12 @@ func genRuntime(r *record) {
 }
 
 // logger name
-func (logger *logging) lname(r *record) interface{} {
+func (logger *Logger) lname(r *record) interface{} {
 	return logger.name
 }
 
 // next sequence number
-func (logger *logging) nextSeqid(r *record) interface{} {
+func (logger *Logger) nextSeqid(r *record) interface{} {
 	if r.seqid == 0 {
 		r.seqid = atomic.AddUint64(&(logger.seqid), 1)
 	}
@@ -115,17 +115,17 @@ func (logger *logging) nextSeqid(r *record) interface{} {
 }
 
 // log level number
-func (logger *logging) levelno(r *record) interface{} {
+func (logger *Logger) levelno(r *record) interface{} {
 	return int(r.level)
 }
 
 // log level name
-func (logger *logging) levelname(r *record) interface{} {
+func (logger *Logger) levelname(r *record) interface{} {
 	return levelNames[r.level]
 }
 
 // file name of calling logger, with whole path
-func (logger *logging) pathname(r *record) interface{} {
+func (logger *Logger) pathname(r *record) interface{} {
 	if r.pathname == "" {
 		genRuntime(r)
 	}
@@ -133,7 +133,7 @@ func (logger *logging) pathname(r *record) interface{} {
 }
 
 // file name of calling logger
-func (logger *logging) filename(r *record) interface{} {
+func (logger *Logger) filename(r *record) interface{} {
 	if r.filename == "" {
 		genRuntime(r)
 	}
@@ -141,12 +141,12 @@ func (logger *logging) filename(r *record) interface{} {
 }
 
 // TODO: module name
-func (logger *logging) module(r *record) interface{} {
+func (logger *Logger) module(r *record) interface{} {
 	return ""
 }
 
 // line number
-func (logger *logging) lineno(r *record) interface{} {
+func (logger *Logger) lineno(r *record) interface{} {
 	if r.lineno == 0 {
 		genRuntime(r)
 	}
@@ -154,7 +154,7 @@ func (logger *logging) lineno(r *record) interface{} {
 }
 
 // function name
-func (logger *logging) funcName(r *record) interface{} {
+func (logger *Logger) funcName(r *record) interface{} {
 	if r.funcName == "" {
 		genRuntime(r)
 	}
@@ -162,12 +162,12 @@ func (logger *logging) funcName(r *record) interface{} {
 }
 
 // timestamp of starting time
-func (logger *logging) created(r *record) interface{} {
+func (logger *Logger) created(r *record) interface{} {
 	return logger.startTime.UnixNano()
 }
 
 // RFC3339Nano time
-func (logger *logging) asctime(r *record) interface{} {
+func (logger *Logger) asctime(r *record) interface{} {
 	if r.time.IsZero() {
 		r.time = time.Now()
 	}
@@ -175,12 +175,12 @@ func (logger *logging) asctime(r *record) interface{} {
 }
 
 // nanosecond of starting time
-func (logger *logging) msecs(r *record) interface{} {
+func (logger *Logger) msecs(r *record) interface{} {
 	return logger.startTime.Nanosecond()
 }
 
 // nanosecond timestamp
-func (logger *logging) timestamp(r *record) interface{} {
+func (logger *Logger) timestamp(r *record) interface{} {
 	if r.time.IsZero() {
 		r.time = time.Now()
 	}
@@ -188,7 +188,7 @@ func (logger *logging) timestamp(r *record) interface{} {
 }
 
 // nanoseconds since logger created
-func (logger *logging) relativeCreated(r *record) interface{} {
+func (logger *Logger) relativeCreated(r *record) interface{} {
 	if r.time.IsZero() {
 		r.time = time.Now()
 	}
@@ -196,7 +196,7 @@ func (logger *logging) relativeCreated(r *record) interface{} {
 }
 
 // thread id
-func (logger *logging) thread(r *record) interface{} {
+func (logger *Logger) thread(r *record) interface{} {
 	if r.thread == 0 {
 		r.thread = int(GetGoId())
 	}
@@ -204,7 +204,7 @@ func (logger *logging) thread(r *record) interface{} {
 }
 
 // thread name
-func (logger *logging) threadName(r *record) interface{} {
+func (logger *Logger) threadName(r *record) interface{} {
 	if r.threadName == "" {
 		r.threadName = fmt.Sprintf("Thread-%d", GetGoId())
 	}
@@ -212,7 +212,7 @@ func (logger *logging) threadName(r *record) interface{} {
 }
 
 // Process ID
-func (logger *logging) process(r *record) interface{} {
+func (logger *Logger) process(r *record) interface{} {
 	if r.process == 0 {
 		r.process = os.Getpid()
 	}
@@ -220,6 +220,6 @@ func (logger *logging) process(r *record) interface{} {
 }
 
 // the log message
-func (logger *logging) message(r *record) interface{} {
+func (logger *Logger) message(r *record) interface{} {
 	return r.message
 }

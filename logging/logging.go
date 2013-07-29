@@ -30,7 +30,7 @@ const (
 )
 
 // the logging struct
-type logging struct {
+type Logger struct {
 	name      string
 	level     Level
 	format    string
@@ -42,32 +42,32 @@ type logging struct {
 }
 
 // create a new logger with simple configuration
-func SimpleLogger(name string) *logging {
-	return Logger(name, WARNING, BasicFormat, os.Stdout, true)
+func SimpleLogger(name string) *Logger {
+	return createLogger(name, WARNING, BasicFormat, os.Stdout, true)
 }
 
 // create a new logger with basic configuration
-func BasicLogger(name string) *logging {
+func BasicLogger(name string) *Logger {
 	return SimpleLogger(name)
 }
 
 // create a new logger with simple configuration
-func RichLogger(name string) *logging {
+func RichLogger(name string) *Logger {
 	return FileLogger(name, NOTSET, RichFormat, defaultFileName, true)
 }
 
 // create a new logger with file output
-func FileLogger(name string, level Level, format string, file string, sync bool) *logging {
+func FileLogger(name string, level Level, format string, file string, sync bool) *Logger {
 	out, err := os.Create(file)
 	if err != nil {
 		panic(err)
 	}
-	return Logger(name, level, format, out, sync)
+	return createLogger(name, level, format, out, sync)
 }
 
 // create a new logger
-func Logger(name string, level Level, format string, out io.Writer, sync bool) *logging {
-	logger := new(logging)
+func createLogger(name string, level Level, format string, out io.Writer, sync bool) *Logger {
+	logger := new(Logger)
 	logger.name = name
 	logger.level = level
 	logger.format = format
@@ -80,51 +80,51 @@ func Logger(name string, level Level, format string, out io.Writer, sync bool) *
 }
 
 // initialize the logger
-func (logger *logging) init() {
+func (logger *Logger) init() {
 	logger.startTime = time.Now()
 }
 
 // get and set the configuration of the logger
-func (logger *logging) Name() string {
+func (logger *Logger) Name() string {
 	return logger.name
 }
 
-func (logger *logging) SetName(name string) {
+func (logger *Logger) SetName(name string) {
 	logger.name = name
 }
 
-func (logger *logging) Level() Level {
+func (logger *Logger) Level() Level {
 	return logger.level
 }
 
-func (logger *logging) SetLevel(level Level) {
+func (logger *Logger) SetLevel(level Level) {
 	logger.level = Level(level)
 }
 
-func (logger *logging) LevelName() string {
+func (logger *Logger) LevelName() string {
 	name, _ := levelNames[logger.level]
 	return name
 }
 
-func (logger *logging) SetLevelName(name string) {
+func (logger *Logger) SetLevelName(name string) {
 	level, ok := levelValues[name]
 	if ok {
 		logger.level = level
 	}
 }
 
-func (logger *logging) Format() string {
+func (logger *Logger) Format() string {
 	return logger.format
 }
 
-func (logger *logging) SetFormat(format string) {
+func (logger *Logger) SetFormat(format string) {
 	logger.format = format
 }
 
-func (logger *logging) Writer() io.Writer {
+func (logger *Logger) Writer() io.Writer {
 	return logger.out
 }
 
-func (logger *logging) SetWriter(out io.Writer) {
+func (logger *Logger) SetWriter(out io.Writer) {
 	logger.out = out
 }
