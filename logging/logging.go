@@ -98,7 +98,12 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 	logger.format = fts[0]
 	logger.fargs = strings.Split(fts[1], ",")
 	for k, v := range logger.fargs {
-		logger.fargs[k] = strings.TrimSpace(v)
+		tv := strings.TrimSpace(v)
+		_, ok := fields[tv]
+		if ok == false {
+			return logger, errors.New("logging format error")
+		}
+		logger.fargs[k] = tv
 	}
 
 	// asign values to logger
