@@ -177,8 +177,20 @@ func (logger *Logger) Writer() io.Writer {
 	return logger.out
 }
 
+func (logger *Logger) AddWriter(out io.Writer) {
+	logger.out = io.MultiWriter(logger.out, out)
+}
+
+func (logger *Logger) AddWriters(out ...io.Writer) {
+	logger.out = io.MultiWriter(append(out, logger.out)...)
+}
+
 func (logger *Logger) SetWriter(out io.Writer) {
 	logger.out = out
+}
+
+func (logger *Logger) SetWriters(out ...io.Writer) {
+	logger.out = io.MultiWriter(out...)
 }
 
 func (logger *Logger) Sync() bool {
