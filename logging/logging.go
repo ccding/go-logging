@@ -103,6 +103,7 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 func (logger *Logger) init() {
 	logger.startTime = time.Now()
 	go logger.watchLog()
+	go logger.timer()
 }
 
 func (logger *Logger) Flush() {
