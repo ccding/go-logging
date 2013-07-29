@@ -69,7 +69,7 @@ func SimpleLogger(name string) (*Logger, error) {
 
 // BasicLogger creates a new logger with basic configuration.
 func BasicLogger(name string) (*Logger, error) {
-	return SimpleLogger(name)
+	return FileLogger(name, WARNING, BasicFormat, defaultFileName, true)
 }
 
 // RichLogger creates a new logger with simple configuration.
