@@ -13,6 +13,18 @@
 // limitations under the License.
 //
 // author: Cong Ding <dinggnu@gmail.com>
+
+// Package logging implements log library for other applications. It provides
+// functions Debug, Info, Warning, Error, Critical, and formatting version
+// Logf.
+//
+// Example:
+//
+//	logger := logging.SimpleLogger("main")
+//	logger.SetLevel(logging.WARNING)
+//	logger.Error("test for error")
+//	logger.Warning("test for warning", "second parameter")
+//	logger.Debug("test for debug")
 //
 package logging
 
