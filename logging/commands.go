@@ -19,8 +19,19 @@ package logging
 import (
 	"bytes"
 	"fmt"
+	"time"
 )
 
+// timer generate flush signal to the logger.flush channel, which makes
+// watchLog be able to write logs to output periodically.
+func (logger *Logger) timer() {
+	for true {
+		time.Sleep(time.Second / 10)
+		logger.flush <- true
+	}
+}
+
+// watchLog watches the logger.queue channel, and writes the logs to output
 func (logger *Logger) watchLog() {
 	var buf bytes.Buffer
 	for true {
