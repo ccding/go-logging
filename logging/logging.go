@@ -45,22 +45,22 @@ type Logger struct {
 	sync      bool
 }
 
-// create a new logger with simple configuration
+// SimpleLogger creates a new logger with simple configuration.
 func SimpleLogger(name string) *Logger {
 	return createLogger(name, WARNING, BasicFormat, os.Stdout, true)
 }
 
-// create a new logger with basic configuration
+// BasieLogger creates a new logger with basic configuration.
 func BasicLogger(name string) *Logger {
 	return SimpleLogger(name)
 }
 
-// create a new logger with simple configuration
+// RichLogger creates a new logger with simple configuration.
 func RichLogger(name string) *Logger {
 	return FileLogger(name, NOTSET, RichFormat, defaultFileName, true)
 }
 
-// create a new logger with file output
+// FileLogger creates a new logger with file output.
 func FileLogger(name string, level Level, format string, file string, sync bool) *Logger {
 	out, err := os.Create(file)
 	if err != nil {
@@ -69,7 +69,7 @@ func FileLogger(name string, level Level, format string, file string, sync bool)
 	return createLogger(name, level, format, out, sync)
 }
 
-// create a new logger
+// createLogger create a new logger
 func createLogger(name string, level Level, format string, out io.Writer, sync bool) *Logger {
 	logger := new(Logger)
 	logger.name = name
@@ -89,6 +89,7 @@ func (logger *Logger) init() {
 }
 
 // get and set the configuration of the logger
+
 func (logger *Logger) Name() string {
 	return logger.name
 }
