@@ -20,17 +20,19 @@ import (
 	"fmt"
 )
 
-// receive log request from the client. the log is a set of variables
+// Logln receives log request from the client. The request includes a set of
+// variables.
 func (logger *Logger) Logln(level Level, v ...interface{}) {
 	logger.logln(level, v...)
 }
 
-// receive log request from the client. the log has a format
+// Logf receives log request from the client. The request has a string
+// parameter to describe the format of output.
 func (logger *Logger) Logf(level Level, format string, v ...interface{}) {
 	logger.logf(level, format, v...)
 }
 
-// record log v... with level `level'
+// logln records log v... with level `level'.
 func (logger *Logger) logln(level Level, v ...interface{}) {
 	if int(level) >= int(logger.level) {
 		message := fmt.Sprint(v...)
@@ -43,7 +45,7 @@ func (logger *Logger) logln(level Level, v ...interface{}) {
 	}
 }
 
-// record log v... with level `level'. the log has a format
+// logf records log v... with level `level'.
 func (logger *Logger) logf(level Level, format string, v ...interface{}) {
 	if int(level) >= int(logger.level) {
 		message := fmt.Sprintf(format, v...)
@@ -56,7 +58,7 @@ func (logger *Logger) logf(level Level, format string, v ...interface{}) {
 	}
 }
 
-// the function to print log to file, stdout, or others
+// printLog is to print log to file, stdout, or others.
 func (logger *Logger) printLog(message string) {
 	logger.lock.Lock()
 	defer logger.lock.Unlock()
@@ -64,6 +66,7 @@ func (logger *Logger) printLog(message string) {
 }
 
 // other quick commands for different level
+
 func (logger *Logger) Critical(v ...interface{}) {
 	logger.logln(CRITICAL, v...)
 }
