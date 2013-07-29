@@ -97,4 +97,5 @@ func BenchmarkPrintln(b *testing.B) {
 		fmt.Fprintln(out, "this is a test from debug")
 		fmt.Fprintln(out, "orz", time.Now().UnixNano())
 	}
+	out.Close()
 }
