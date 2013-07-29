@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"os"
 	"testing"
-	"time"
 )
 
 func BenchmarkSync(b *testing.B) {
@@ -29,11 +28,6 @@ func BenchmarkSync(b *testing.B) {
 	logger.SetSync(true)
 	for i := 0; i < b.N; i++ {
 		logger.Error("this is a test from error")
-		logger.Debug("this is a test from debug")
-		logger.Notset("orz", time.Now().UnixNano())
-		logger.Error("this is a test from error")
-		logger.Debug("this is a test from debug")
-		logger.Notset("orz", time.Now().UnixNano())
 	}
 	logger.Flush()
 	logger.Destroy()
@@ -45,11 +39,6 @@ func BenchmarkAsync(b *testing.B) {
 	logger.SetSync(false)
 	for i := 0; i < b.N; i++ {
 		logger.Error("this is a test from error")
-		logger.Debug("this is a test from debug")
-		logger.Notset("orz", time.Now().UnixNano())
-		logger.Error("this is a test from error")
-		logger.Debug("this is a test from debug")
-		logger.Notset("orz", time.Now().UnixNano())
 	}
 	logger.Flush()
 	logger.Destroy()
@@ -61,11 +50,6 @@ func BenchmarkBasicSync(b *testing.B) {
 	logger.SetSync(true)
 	for i := 0; i < b.N; i++ {
 		logger.Error("this is a test from error")
-		logger.Debug("this is a test from debug")
-		logger.Notset("orz", time.Now().UnixNano())
-		logger.Error("this is a test from error")
-		logger.Debug("this is a test from debug")
-		logger.Notset("orz", time.Now().UnixNano())
 	}
 	logger.Flush()
 	logger.Destroy()
@@ -77,11 +61,6 @@ func BenchmarkBasicAsync(b *testing.B) {
 	logger.SetSync(false)
 	for i := 0; i < b.N; i++ {
 		logger.Error("this is a test from error")
-		logger.Debug("this is a test from debug")
-		logger.Notset("orz", time.Now().UnixNano())
-		logger.Error("this is a test from error")
-		logger.Debug("this is a test from debug")
-		logger.Notset("orz", time.Now().UnixNano())
 	}
 	logger.Flush()
 	logger.Destroy()
@@ -91,11 +70,6 @@ func BenchmarkPrintln(b *testing.B) {
 	out, _ := os.Create("logging.log")
 	for i := 0; i < b.N; i++ {
 		fmt.Fprintln(out, "this is a test from error")
-		fmt.Fprintln(out, "this is a test from debug")
-		fmt.Fprintln(out, "orz", time.Now().UnixNano())
-		fmt.Fprintln(out, "this is a test from error")
-		fmt.Fprintln(out, "this is a test from debug")
-		fmt.Fprintln(out, "orz", time.Now().UnixNano())
 	}
 	out.Close()
 }
