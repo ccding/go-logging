@@ -118,12 +118,6 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 	return logger, nil
 }
 
-// Initialize the logger
-func (logger *Logger) init() error {
-
-	return nil
-}
-
 func (logger *Logger) Flush() {
 	logger.flush <- true
 }
