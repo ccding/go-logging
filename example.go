@@ -32,4 +32,5 @@ func main() {
 	logger.Error("this is a test from error")
 	logger.Debug("this is a test from debug")
 	logger.Notset("orz", time.Now().UnixNano())
+	logger.Flush()
 }

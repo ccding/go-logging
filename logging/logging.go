@@ -55,6 +55,8 @@ type Logger struct {
 	lock      sync.Mutex
 	startTime time.Time
 	sync      bool
+	queue     chan string
+	flush     chan bool
 }
 
 // SimpleLogger creates a new logger with simple configuration.
@@ -90,6 +92,8 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 	logger.out = out
 	logger.seqid = 0
 	logger.sync = sync
+	logger.queue = make(chan string)
+	logger.flush = make(chan bool)
 
 	logger.init()
 	return logger
@@ -98,6 +102,11 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 // Initialize the logger
 func (logger *Logger) init() {
 	logger.startTime = time.Now()
+	go logger.watchLog()
+}
+
+func (logger *Logger) Flush() {
+	logger.flush <- true
 }
 
 // Get and set the configuration of the logger
@@ -144,4 +153,12 @@ func (logger *Logger) Writer() io.Writer {
 
 func (logger *Logger) SetWriter(out io.Writer) {
 	logger.out = out
+}
+
+func (logger *Logger) Sync() bool {
+	return logger.sync
+}
+
+func (logger *Logger) SetSync(sync bool) {
+	logger.sync = sync
 }
