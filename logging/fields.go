@@ -68,7 +68,7 @@ var fields = map[string]func(*Logger, *record) interface{}{
 const errString = "???"
 
 // GetGoId returns the id of goroutine, which is defined in ./get_go_id.c
-func GetGoId() int32
+func GetGoID() int32
 
 // generate the runtime information, including pathname, function name,
 // filename, line number.
@@ -198,7 +198,7 @@ func (logger *Logger) relativeCreated(r *record) interface{} {
 // thread id
 func (logger *Logger) thread(r *record) interface{} {
 	if r.thread == 0 {
-		r.thread = int(GetGoId())
+		r.thread = int(GetGoID())
 	}
 	return r.thread
 }
@@ -206,7 +206,7 @@ func (logger *Logger) thread(r *record) interface{} {
 // thread name
 func (logger *Logger) threadName(r *record) interface{} {
 	if r.threadName == "" {
-		r.threadName = fmt.Sprintf("Thread-%d", GetGoId())
+		r.threadName = fmt.Sprintf("Thread-%d", GetGoID())
 	}
 	return r.threadName
 }
