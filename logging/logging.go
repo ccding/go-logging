@@ -41,6 +41,7 @@ import (
 const (
 	defaultFileName = "logging.log"
 	configFileName  = "logging.conf"
+	queueSize       = 1000
 )
 
 // Logger is the logging struct.
@@ -107,7 +108,7 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 	logger.out = out
 	logger.seqid = 0
 	logger.sync = sync
-	logger.queue = make(chan string)
+	logger.queue = make(chan string, queueSize)
 	logger.flush = make(chan bool)
 	logger.quit = make(chan bool)
 	logger.startTime = time.Now()
