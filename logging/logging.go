@@ -90,20 +90,9 @@ func FileLogger(name string, level Level, format string, file string, sync bool)
 func createLogger(name string, level Level, format string, out io.Writer, sync bool) (*Logger, error) {
 	logger := new(Logger)
 
-	// partially check the legality of format
-	fts := strings.Split(format, "\n")
-	if len(fts) != 2 {
-		return logger, errors.New("logging format error")
-	}
-	logger.format = fts[0]
-	logger.fargs = strings.Split(fts[1], ",")
-	for k, v := range logger.fargs {
-		tv := strings.TrimSpace(v)
-		_, ok := fields[tv]
-		if ok == false {
-			return logger, errors.New("logging format error")
-		}
-		logger.fargs[k] = tv
+	err := logger.SetFormat(format)
+	if err != nil {
+		return logger, err
 	}
 
 	// asign values to logger
@@ -161,8 +150,27 @@ func (logger *Logger) Format() string {
 	return logger.format
 }
 
-func (logger *Logger) SetFormat(format string) {
-	logger.format = format
+func (logger *Logger) Fargs() []string {
+	return logger.fargs
+}
+
+func (logger *Logger) SetFormat(format string) error {
+	// partially check the legality of format
+	fts := strings.Split(format, "\n")
+	if len(fts) != 2 {
+		return errors.New("logging format error")
+	}
+	logger.format = fts[0]
+	logger.fargs = strings.Split(fts[1], ",")
+	for k, v := range logger.fargs {
+		tv := strings.TrimSpace(v)
+		_, ok := fields[tv]
+		if ok == false {
+			return errors.New("logging format error")
+		}
+		logger.fargs[k] = tv
+	}
+	return nil
 }
 
 func (logger *Logger) Writer() io.Writer {
