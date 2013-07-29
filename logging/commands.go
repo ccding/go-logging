@@ -31,8 +31,8 @@ func (logger *Logger) timer() {
 	}
 }
 
-// watchLog watches the logger.queue channel, and writes the logs to output
-func (logger *Logger) watchLog() {
+// watcher watches the logger.queue channel, and writes the logs to output
+func (logger *Logger) watcher() {
 	var buf bytes.Buffer
 	for true {
 		for i := 0; i < 1000; i++ {

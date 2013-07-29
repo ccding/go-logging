@@ -30,9 +30,6 @@ const (
 // genLog generates log string from the format setting.
 func (logger *Logger) genLog(level Level, message string) string {
 	format := strings.Split(logger.format, "\n")
-	if len(format) != 2 {
-		return "logging format error"
-	}
 	args := strings.Split(format[1], ",")
 	fs := make([]interface{}, len(args))
 	r := new(record)

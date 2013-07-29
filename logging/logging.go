@@ -29,8 +29,10 @@
 package logging
 
 import (
+	"errors"
 	"io"
 	"os"
+	"strings"
 	"sync"
 	"time"
 )
@@ -60,22 +62,22 @@ type Logger struct {
 }
 
 // SimpleLogger creates a new logger with simple configuration.
-func SimpleLogger(name string) *Logger {
+func SimpleLogger(name string) (*Logger, error) {
 	return createLogger(name, WARNING, BasicFormat, os.Stdout, true)
 }
 
 // BasicLogger creates a new logger with basic configuration.
-func BasicLogger(name string) *Logger {
+func BasicLogger(name string) (*Logger, error) {
 	return SimpleLogger(name)
 }
 
 // RichLogger creates a new logger with simple configuration.
-func RichLogger(name string) *Logger {
+func RichLogger(name string) (*Logger, error) {
 	return FileLogger(name, NOTSET, RichFormat, defaultFileName, true)
 }
 
 // FileLogger creates a new logger with file output.
-func FileLogger(name string, level Level, format string, file string, sync bool) *Logger {
+func FileLogger(name string, level Level, format string, file string, sync bool) (*Logger, error) {
 	out, err := os.Create(file)
 	if err != nil {
 		panic(err)
@@ -84,7 +86,7 @@ func FileLogger(name string, level Level, format string, file string, sync bool)
 }
 
 // createLogger create a new logger
-func createLogger(name string, level Level, format string, out io.Writer, sync bool) *Logger {
+func createLogger(name string, level Level, format string, out io.Writer, sync bool) (*Logger, error) {
 	logger := new(Logger)
 	logger.name = name
 	logger.level = level
@@ -95,15 +97,25 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 	logger.queue = make(chan string)
 	logger.flush = make(chan bool)
 
-	logger.init()
-	return logger
+	err := logger.init()
+	return logger, err
 }
 
 // Initialize the logger
-func (logger *Logger) init() {
+func (logger *Logger) init() error {
 	logger.startTime = time.Now()
-	go logger.watchLog()
+
+	// partially check the legality of format
+	format := strings.Split(logger.format, "\n")
+	if len(format) != 2 {
+		return errors.New("logging format error")
+	}
+
+	// start watcher and timer
+	go logger.watcher()
 	go logger.timer()
+
+	return nil
 }
 
 func (logger *Logger) Flush() {

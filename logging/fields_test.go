@@ -37,7 +37,7 @@ func TestGetGoID(t *testing.T) {
 }
 
 func TestSeqid(t *testing.T) {
-	logger := BasicLogger("test")
+	logger, _ := BasicLogger("test")
 	for i := 0; i < 1000; i++ {
 		r := new(record)
 		name := strconv.Itoa(i + 1)
@@ -51,7 +51,7 @@ func TestSeqid(t *testing.T) {
 func TestName(t *testing.T) {
 	for i := 0; i < 1000; i++ {
 		name := strconv.Itoa(i)
-		logger := BasicLogger(name)
+		logger, _ := BasicLogger(name)
 		r := new(record)
 		if logger.lname(r) != name {
 			t.Errorf("%v, %v\n", logger.lname(r), name)
