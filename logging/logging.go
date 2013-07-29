@@ -67,17 +67,17 @@ type Logger struct {
 
 // SimpleLogger creates a new logger with simple configuration.
 func SimpleLogger(name string) (*Logger, error) {
-	return createLogger(name, WARNING, BasicFormat, os.Stdout, true)
+	return createLogger(name, WARNING, BasicFormat, os.Stdout, false)
 }
 
 // BasicLogger creates a new logger with basic configuration.
 func BasicLogger(name string) (*Logger, error) {
-	return FileLogger(name, WARNING, BasicFormat, defaultFileName, true)
+	return FileLogger(name, WARNING, BasicFormat, defaultFileName, false)
 }
 
 // RichLogger creates a new logger with simple configuration.
 func RichLogger(name string) (*Logger, error) {
-	return FileLogger(name, NOTSET, RichFormat, defaultFileName, true)
+	return FileLogger(name, NOTSET, RichFormat, defaultFileName, false)
 }
 
 // FileLogger creates a new logger with file output.
