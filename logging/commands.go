@@ -26,7 +26,7 @@ func (logger *Logger) Log(level Level, v ...interface{}) {
 	// Don't delete this calling. The calling is used to keep the same
 	// calldepth for all the logging functions. The calldepth is used to
 	// get runtime information such as line number, function name, etc.
-	logger.logln(level, v...)
+	logger.log(level, v...)
 }
 
 // Logf receives log request from the client. The request has a string
@@ -35,8 +35,8 @@ func (logger *Logger) Logf(level Level, format string, v ...interface{}) {
 	logger.logf(level, format, v...)
 }
 
-// logln records log v... with level `level'.
-func (logger *Logger) logln(level Level, v ...interface{}) {
+// log records log v... with level `level'.
+func (logger *Logger) log(level Level, v ...interface{}) {
 	if int(level) >= int(logger.level) {
 		message := fmt.Sprint(v...)
 		message = logger.genLog(level, message)
@@ -71,35 +71,35 @@ func (logger *Logger) printLog(message string) {
 // Other quick commands for different level
 
 func (logger *Logger) Critical(v ...interface{}) {
-	logger.logln(CRITICAL, v...)
+	logger.log(CRITICAL, v...)
 }
 
 func (logger *Logger) Fatal(v ...interface{}) {
-	logger.logln(CRITICAL, v...)
+	logger.log(CRITICAL, v...)
 }
 
 func (logger *Logger) Error(v ...interface{}) {
-	logger.logln(ERROR, v...)
+	logger.log(ERROR, v...)
 }
 
 func (logger *Logger) Warn(v ...interface{}) {
-	logger.logln(WARNING, v...)
+	logger.log(WARNING, v...)
 }
 
 func (logger *Logger) Warning(v ...interface{}) {
-	logger.logln(WARNING, v...)
+	logger.log(WARNING, v...)
 }
 
 func (logger *Logger) Info(v ...interface{}) {
-	logger.logln(INFO, v...)
+	logger.log(INFO, v...)
 }
 
 func (logger *Logger) Debug(v ...interface{}) {
-	logger.logln(DEBUG, v...)
+	logger.log(DEBUG, v...)
 }
 
 func (logger *Logger) Notset(v ...interface{}) {
-	logger.logln(NOTSET, v...)
+	logger.log(NOTSET, v...)
 }
 
 func (logger *Logger) Criticalf(format string, v ...interface{}) {
