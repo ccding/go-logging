@@ -19,7 +19,6 @@ package logging
 import (
 	"strconv"
 	"testing"
-	"time"
 )
 
 func TestAddLevel(t *testing.T) {
@@ -27,7 +26,6 @@ func TestAddLevel(t *testing.T) {
 		level := Level(i)
 		name := "L" + strconv.Itoa(i)
 		AddLevel(name, level)
-		time.Sleep(time.Second / 1000)
 		if level.String() != name {
 			t.Errorf("%v, %v, %v", level, name, level.String())
 		}
@@ -51,7 +49,6 @@ func TestSetLevel(t *testing.T) {
 		level := Level(i + 100)
 		name := "S" + strconv.Itoa(i)
 		SetLevel(name, level)
-		time.Sleep(time.Second / 1000)
 		if level.String() != name {
 			t.Errorf("%v, %v, %v", level, name, level.String())
 		}
