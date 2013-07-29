@@ -22,7 +22,7 @@ import (
 
 // Logln receives log request from the client. The request includes a set of
 // variables.
-func (logger *Logger) Logln(level Level, v ...interface{}) {
+func (logger *Logger) Log(level Level, v ...interface{}) {
 	logger.logln(level, v...)
 }
 
@@ -95,6 +95,38 @@ func (logger *Logger) Debug(v ...interface{}) {
 	logger.logln(DEBUG, v...)
 }
 
-func (logger *Logger) Log(v ...interface{}) {
+func (logger *Logger) Notset(v ...interface{}) {
 	logger.logln(NOTSET, v...)
+}
+
+func (logger *Logger) Criticalf(format string, v ...interface{}) {
+	logger.logf(CRITICAL, format, v...)
+}
+
+func (logger *Logger) Fatalf(format string, v ...interface{}) {
+	logger.logf(CRITICAL, format, v...)
+}
+
+func (logger *Logger) Errorf(format string, v ...interface{}) {
+	logger.logf(ERROR, format, v...)
+}
+
+func (logger *Logger) Warnf(format string, v ...interface{}) {
+	logger.logf(WARNING, format, v...)
+}
+
+func (logger *Logger) Warningf(format string, v ...interface{}) {
+	logger.logf(WARNING, format, v...)
+}
+
+func (logger *Logger) Infof(format string, v ...interface{}) {
+	logger.logf(INFO, format, v...)
+}
+
+func (logger *Logger) Debugf(format string, v ...interface{}) {
+	logger.logf(DEBUG, format, v...)
+}
+
+func (logger *Logger) Notsetf(format string, v ...interface{}) {
+	logger.logf(NOTSET, format, v...)
 }

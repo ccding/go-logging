@@ -26,10 +26,10 @@ func main() {
 	logger.SetLevel(logging.NOTSET)
 	logger.Error("this is a test from error")
 	logger.Debug("this is a test from debug")
-	logger.Log("orz", time.Now().UnixNano())
+	logger.Notset("orz", time.Now().UnixNano())
 	logger.SetFormat(logging.RichFormat)
 	logger.SetLevel(logging.DEBUG)
 	logger.Error("this is a test from error")
 	logger.Debug("this is a test from debug")
-	logger.Log("orz", time.Now().UnixNano())
+	logger.Notset("orz", time.Now().UnixNano())
 }
