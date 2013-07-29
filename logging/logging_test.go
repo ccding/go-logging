@@ -22,7 +22,7 @@ import (
 )
 
 func BenchmarkSync(b *testing.B) {
-	logger := RichLogger("main")
+	logger, _ := RichLogger("main")
 	logger.SetLevel(NOTSET)
 	logger.SetSync(true)
 	for i := 0; i < b.N; i++ {
@@ -37,7 +37,7 @@ func BenchmarkSync(b *testing.B) {
 }
 
 func BenchmarkAsync(b *testing.B) {
-	logger := RichLogger("main")
+	logger, _ := RichLogger("main")
 	logger.SetLevel(NOTSET)
 	logger.SetSync(false)
 	for i := 0; i < b.N; i++ {
