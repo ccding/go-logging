@@ -37,11 +37,11 @@ import (
 
 // Pre-defined formats
 const (
-	defaultFileName   = "logging.log"                   // default logging filename
-	configFileName    = "logging.conf"                  // default configuration filename
-	defaultTimeFormat = "2006-01-02 15:04:05.999999999" // defaulttime format
-	bufSize           = 1000                            // buffer size for writer
-	queueSize         = 1000                            // chan queue size in async logging
+	DefaultFileName       = "logging.log"                   // default logging filename
+	DefaultConfigFileName = "logging.conf"                  // default configuration filename
+	DefaultTimeFormat     = "2006-01-02 15:04:05.999999999" // defaulttime format
+	bufSize               = 1000                            // buffer size for writer
+	queueSize             = 1000                            // chan queue size in async logging
 )
 
 // Logger is the logging struct.
@@ -79,12 +79,12 @@ func SimpleLogger(name string) (*Logger, error) {
 
 // BasicLogger creates a new logger with basic configuration.
 func BasicLogger(name string) (*Logger, error) {
-	return FileLogger(name, WARNING, BasicFormat, defaultFileName, false)
+	return FileLogger(name, WARNING, BasicFormat, DefaultFileName, false)
 }
 
 // RichLogger creates a new logger with simple configuration.
 func RichLogger(name string) (*Logger, error) {
-	return FileLogger(name, NOTSET, RichFormat, defaultFileName, false)
+	return FileLogger(name, NOTSET, RichFormat, DefaultFileName, false)
 }
 
 // FileLogger creates a new logger with file output.
@@ -124,7 +124,7 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 	logger.quit = make(chan bool)
 	logger.startTime = time.Now()
 	logger.fd = nil
-	logger.timeFormat = defaultTimeFormat
+	logger.timeFormat = DefaultTimeFormat
 
 	// start watcher to write logs if it is async
 	if sync == false {
