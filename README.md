@@ -76,7 +76,7 @@ It supports the following fields for the second part of the format.
 "rtime":     int64    %d  relative time since started
 "filename":  string   %s  source filename of the caller
 "pathname":  string   %s  filename with path
-"module":    string   %s  executable filename // TODO
+"module":    string   %s  executable filename
 "lineno":    int      %d  line number in source code
 "funcname":  string   %s  function name of the caller
 "thread":    int32    %d  thread id

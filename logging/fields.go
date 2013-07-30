@@ -17,6 +17,7 @@
 package logging
 
 import (
+	"bitbucket.org/kardianos/osext"
 	"os"
 	"path"
 	"runtime"
@@ -137,9 +138,10 @@ func (logger *Logger) filename(r *record) interface{} {
 	return r.filename
 }
 
-// TODO: module name
+// module name
 func (logger *Logger) module(r *record) interface{} {
-	return ""
+	module, _ := osext.Executable()
+	return path.Base(module)
 }
 
 // Line number
