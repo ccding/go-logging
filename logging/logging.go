@@ -188,18 +188,6 @@ func (logger *Logger) SetLevel(level Level) {
 	logger.level = Level(level)
 }
 
-func (logger *Logger) LevelName() string {
-	name, _ := levelNames[logger.level]
-	return name
-}
-
-func (logger *Logger) SetLevelName(name string) {
-	level, ok := levelValues[name]
-	if ok {
-		logger.level = level
-	}
-}
-
 func (logger *Logger) Format() string {
 	return logger.format
 }
