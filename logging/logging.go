@@ -91,7 +91,7 @@ func RichLogger(name string) (*Logger, error) {
 func FileLogger(name string, level Level, format string, file string, sync bool) (*Logger, error) {
 	out, err := os.Create(file)
 	if err != nil {
-		panic(err)
+		return new(Logger), err
 	}
 	logger, err := createLogger(name, level, format, out, sync)
 	if err == nil {
