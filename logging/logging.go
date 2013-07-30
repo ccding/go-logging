@@ -155,7 +155,9 @@ func (logger *Logger) quitWatcher() {
 
 // Flush the writer
 func (logger *Logger) Flush() {
-	logger.flush <- true
+	if logger.sync == false{
+		logger.flush <- true
+	}
 }
 
 // Get and set the configuration of the logger
