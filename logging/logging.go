@@ -42,7 +42,7 @@ const (
 	DefaultConfigFileName = "logging.conf"                  // default configuration filename
 	DefaultTimeFormat     = "2006-01-02 15:04:05.999999999" // defaulttime format
 	bufSize               = 1000                            // buffer size for writer
-	queueSize             = 1000                            // chan queue size in async logging
+	queueSize             = 1e6                             // chan queue size in async logging
 )
 
 // Logger is the logging struct.
@@ -66,11 +66,20 @@ type Logger struct {
 	timeFormat string    // format for time
 
 	// Internal used variables, which don't have get and set functions.
-	lock  sync.Mutex  // writer lock
-	queue chan string // queue used in async logging
-	flush chan bool   // flush signal for the watcher to write
-	quit  chan bool   // quit signal for the watcher to quit
-	fd    *os.File    // file handler, used to close the file on destroy
+	lock    sync.Mutex   // writer lock
+	queue   chan string  // queue used in async logging
+	request chan request // queue used in async logging
+	flush   chan bool    // flush signal for the watcher to write
+	quit    chan bool    // quit signal for the watcher to quit
+	fd      *os.File     // file handler, used to close the file on destroy
+	runtime bool         // with runtime operation or not
+}
+
+// request struct stores the logger request
+type request struct {
+	level  Level
+	format string
+	v      []interface{}
 }
 
 // SimpleLogger creates a new logger with simple configuration.
@@ -109,7 +118,7 @@ func WriterLogger(name string, level Level, format string, out io.Writer, sync b
 func createLogger(name string, level Level, format string, out io.Writer, sync bool) (*Logger, error) {
 	logger := new(Logger)
 
-	err := logger.SetFormat(format)
+	err := logger.parseFormat(format)
 	if err != nil {
 		return logger, err
 	}
@@ -121,14 +130,15 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 	logger.seqid = 0
 	logger.sync = sync
 	logger.queue = make(chan string, queueSize)
+	logger.request = make(chan request, queueSize)
 	logger.flush = make(chan bool)
 	logger.quit = make(chan bool)
 	logger.startTime = time.Now()
 	logger.fd = nil
 	logger.timeFormat = DefaultTimeFormat
 
-	// start watcher to write logs if it is async
-	if sync == false {
+	// start watcher to write logs if it is async or no runtime field
+	if logger.sync == false || logger.runtime == false {
 		go logger.watcher()
 	}
 
@@ -137,9 +147,7 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 
 // Destroy sends quit signal to watcher and releases all the resources.
 func (logger *Logger) Destroy() {
-
 	logger.quitWatcher()
-
 	// clean up
 	if logger.fd != nil {
 		logger.fd.Close()
@@ -147,10 +155,9 @@ func (logger *Logger) Destroy() {
 }
 
 func (logger *Logger) quitWatcher() {
-	if logger.sync == false {
+	if logger.sync == false || logger.runtime == false {
 		// quit watcher
 		logger.quit <- true
-
 		// wait for watcher quit
 		<-logger.quit
 	}
@@ -158,7 +165,7 @@ func (logger *Logger) quitWatcher() {
 
 // Flush the writer
 func (logger *Logger) Flush() {
-	if logger.sync == false {
+	if logger.sync == false || logger.runtime == false {
 		logger.flush <- true
 	}
 }
@@ -231,7 +238,7 @@ func (logger *Logger) SetSync(sync bool) {
 	}
 	logger.quitWatcher()
 	logger.sync = sync
-	if logger.sync == false {
+	if logger.sync == false || logger.runtime == false {
 		go logger.watcher()
 	}
 }

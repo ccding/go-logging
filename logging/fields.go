@@ -61,6 +61,26 @@ var fields = map[string]func(*Logger, *record) interface{}{
 	"message":   (*Logger).message,   // logger message
 }
 
+var runtimeFields = map[string]bool{
+	"name":      false,
+	"seqid":     false,
+	"levelno":   false,
+	"levelname": false,
+	"created":   false,
+	"nsecs":     false,
+	"time":      false,
+	"timestamp": false,
+	"rtime":     false,
+	"filename":  true,
+	"pathname":  true,
+	"module":    false,
+	"lineno":    true,
+	"funcname":  true,
+	"thread":    true,
+	"process":   false,
+	"message":   false,
+}
+
 // If it fails to get some fields with string type, these fields are set to
 // errString value.
 const errString = "???"

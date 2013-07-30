@@ -33,6 +33,18 @@ func (logger *Logger) watcher() {
 			select {
 			case msg := <-logger.queue:
 				fmt.Fprintln(&buf, msg)
+			case req := <-logger.request:
+				if int32(req.level) >= atomic.LoadInt32((*int32)(&logger.level)) {
+					if req.format == "" {
+						msg := fmt.Sprint(req.v...)
+						msg = logger.genLog(req.level, msg)
+						fmt.Fprintln(&buf, msg)
+					} else {
+						msg := fmt.Sprintf(req.format, req.v...)
+						msg = logger.genLog(req.level, msg)
+						fmt.Fprintln(&buf, msg)
+					}
+				}
 			case <-timeout:
 				break
 			case <-logger.flush:
@@ -80,18 +92,33 @@ func (logger *Logger) printLog(message string) {
 
 // log records log v... with level `level'.
 func (logger *Logger) log(level Level, v ...interface{}) {
-	if int32(level) >= atomic.LoadInt32((*int32)(&logger.level)) {
-		message := fmt.Sprint(v...)
-		message = logger.genLog(level, message)
-		logger.printLog(message)
+	if logger.runtime {
+		if int32(level) >= atomic.LoadInt32((*int32)(&logger.level)) {
+			message := fmt.Sprint(v...)
+			message = logger.genLog(level, message)
+			logger.printLog(message)
+		}
+	} else {
+		r := new(request)
+		r.level = level
+		r.v = v
+		logger.request <- *r
 	}
 }
 
 // logf records log v... with level `level'.
 func (logger *Logger) logf(level Level, format string, v ...interface{}) {
-	if int32(level) >= atomic.LoadInt32((*int32)(&logger.level)) {
-		message := fmt.Sprintf(format, v...)
-		message = logger.genLog(level, message)
-		logger.printLog(message)
+	if logger.runtime {
+		if int32(level) >= atomic.LoadInt32((*int32)(&logger.level)) {
+			message := fmt.Sprintf(format, v...)
+			message = logger.genLog(level, message)
+			logger.printLog(message)
+		}
+	} else {
+		r := new(request)
+		r.level = level
+		r.format = format
+		r.v = v
+		logger.request <- *r
 	}
 }

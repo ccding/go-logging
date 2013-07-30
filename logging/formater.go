@@ -42,6 +42,7 @@ func (logger *Logger) genLog(level Level, message string) string {
 
 // parseFormat checks the legality of format and parses it to format and fargs
 func (logger *Logger) parseFormat(format string) error {
+	logger.runtime = false
 	fts := strings.Split(format, "\n")
 	if len(fts) != 2 {
 		return errors.New("logging format error")
@@ -55,6 +56,7 @@ func (logger *Logger) parseFormat(format string) error {
 			return errors.New("logging format error")
 		}
 		logger.fargs[k] = tv
+		logger.runtime = logger.runtime || runtimeFields[tv]
 	}
 	return nil
 }

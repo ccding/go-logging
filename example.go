@@ -27,6 +27,7 @@ func main() {
 	logger.Error("this is a test from error")
 	logger.Debug("this is a test from debug")
 	logger.Notset("orz", time.Now().UnixNano())
+	time.Sleep(time.Second / 1000)
 	logger.SetFormat(logging.RichFormat)
 	logger.SetLevel(logging.DEBUG)
 	logger.Error("this is a test from error")
