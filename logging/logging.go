@@ -39,10 +39,10 @@ import (
 
 // Pre-defined formats
 const (
-	defaultFileName = "logging.log"
-	configFileName  = "logging.conf"
-	bufSize         = 1000
-	queueSize       = 1000
+	defaultFileName = "logging.log"  // default logging filename
+	configFileName  = "logging.conf" // default configuration filename
+	bufSize         = 1000           // buffer size for writer
+	queueSize       = 1000           // chan queue size in async logging
 )
 
 // Logger is the logging struct.
