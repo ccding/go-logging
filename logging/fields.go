@@ -41,23 +41,23 @@ type record struct {
 
 // This variable maps fields in format to relavent function signatures
 var fields = map[string]func(*Logger, *record) interface{}{
-	"name":            (*Logger).lname,
-	"seqid":           (*Logger).nextSeqid,
-	"levelno":         (*Logger).levelno,
-	"levelname":       (*Logger).levelname,
-	"pathname":        (*Logger).pathname,
-	"filename":        (*Logger).filename,
-	"module":          (*Logger).module,
-	"lineno":          (*Logger).lineno,
-	"funcname":        (*Logger).funcname,
-	"created":         (*Logger).created,
-	"time":            (*Logger).time,
-	"msecs":           (*Logger).msecs,
-	"relativeCreated": (*Logger).relativeCreated,
-	"thread":          (*Logger).thread,
-	"process":         (*Logger).process,
-	"message":         (*Logger).message,
-	"timestamp":       (*Logger).timestamp,
+	"name":            (*Logger).lname,           // name of the logger
+	"seqid":           (*Logger).nextSeqid,       // sequence number
+	"levelno":         (*Logger).levelno,         // level number
+	"levelname":       (*Logger).levelname,       // level name
+	"filename":        (*Logger).filename,        // source filename of the caller
+	"pathname":        (*Logger).pathname,        // filename with path
+	"module":          (*Logger).module,          // executable filename
+	"lineno":          (*Logger).lineno,          // line number in source code
+	"funcname":        (*Logger).funcname,        // function name of the caller
+	"created":         (*Logger).created,         // starting time of the logger
+	"time":            (*Logger).time,            // record created time
+	"msecs":           (*Logger).msecs,           // nanosecond of the starting time
+	"relativeCreated": (*Logger).relativeCreated, // nanoseconds since started
+	"thread":          (*Logger).thread,          // thread id
+	"process":         (*Logger).process,         // process id
+	"message":         (*Logger).message,         // logger message
+	"timestamp":       (*Logger).timestamp,       // timestamp of record
 }
 
 // If it fails to get some fields with string type, these fields are set to
