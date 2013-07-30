@@ -29,10 +29,8 @@
 package logging
 
 import (
-	"errors"
 	"io"
 	"os"
-	"strings"
 	"sync"
 	"time"
 )
@@ -207,22 +205,7 @@ func (logger *Logger) Fargs() []string {
 }
 
 func (logger *Logger) SetFormat(format string) error {
-	// partially check the legality of format
-	fts := strings.Split(format, "\n")
-	if len(fts) != 2 {
-		return errors.New("logging format error")
-	}
-	logger.format = fts[0]
-	logger.fargs = strings.Split(fts[1], ",")
-	for k, v := range logger.fargs {
-		tv := strings.TrimSpace(v)
-		_, ok := fields[tv]
-		if ok == false {
-			return errors.New("logging format error")
-		}
-		logger.fargs[k] = tv
-	}
-	return nil
+	return logger.parseFormat(format)
 }
 
 func (logger *Logger) Writer() io.Writer {

@@ -16,7 +16,11 @@
 //
 package logging
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"strings"
+)
 
 // pre-defined formats
 const (
@@ -34,4 +38,23 @@ func (logger *Logger) genLog(level Level, message string) string {
 		fs[k] = fields[v](logger, r)
 	}
 	return fmt.Sprintf(logger.format, fs...)
+}
+
+// parseFormat checks the legality of format and parses it to format and fargs
+func (logger *Logger) parseFormat(format string) error {
+	fts := strings.Split(format, "\n")
+	if len(fts) != 2 {
+		return errors.New("logging format error")
+	}
+	logger.format = fts[0]
+	logger.fargs = strings.Split(fts[1], ",")
+	for k, v := range logger.fargs {
+		tv := strings.TrimSpace(v)
+		_, ok := fields[tv]
+		if ok == false {
+			return errors.New("logging format error")
+		}
+		logger.fargs[k] = tv
+	}
+	return nil
 }
