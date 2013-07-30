@@ -33,9 +33,9 @@ func (logger *Logger) watcher() {
 			case msg := <-logger.queue:
 				fmt.Fprintln(&buf, msg)
 			case <-timeout:
-				i = queueSize
+				break
 			case <-logger.flush:
-				i = queueSize
+				break
 			case <-logger.quit:
 				// If quit signal received, cleans the channel
 				// and writes all of them to io.Writer.
