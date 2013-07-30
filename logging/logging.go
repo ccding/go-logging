@@ -41,6 +41,7 @@ import (
 const (
 	defaultFileName = "logging.log"
 	configFileName  = "logging.conf"
+	bufSize         = 1000
 	queueSize       = 1000
 )
 

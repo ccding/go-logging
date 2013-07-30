@@ -28,7 +28,7 @@ func (logger *Logger) watcher() {
 	for {
 		timeout := time.After(time.Second / 10)
 
-		for i := 0; i < queueSize; i++ {
+		for i := 0; i < bufSize; i++ {
 			select {
 			case msg := <-logger.queue:
 				fmt.Fprintln(&buf, msg)
