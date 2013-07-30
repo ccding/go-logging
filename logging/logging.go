@@ -100,6 +100,10 @@ func FileLogger(name string, level Level, format string, file string, sync bool)
 	return logger, err
 }
 
+func WriterLogger(name string, level Level, format string, out io.Writer, sync bool) (*Logger, error) {
+	return createLogger(name, level, format, out, sync)
+}
+
 // createLogger create a new logger
 func createLogger(name string, level Level, format string, out io.Writer, sync bool) (*Logger, error) {
 	logger := new(Logger)
