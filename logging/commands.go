@@ -68,9 +68,13 @@ func (logger *Logger) flushBuf(b *bytes.Buffer) {
 
 // printLog is to print log to file, stdout, or others.
 func (logger *Logger) printLog(message string) {
-	logger.lock.Lock()
-	defer logger.lock.Unlock()
-	fmt.Fprintln(logger.out, message)
+	if logger.sync {
+		logger.lock.Lock()
+		defer logger.lock.Unlock()
+		fmt.Fprintln(logger.out, message)
+	} else {
+		logger.queue <- message
+	}
 }
 
 // log records log v... with level `level'.
@@ -78,11 +82,7 @@ func (logger *Logger) log(level Level, v ...interface{}) {
 	if int(level) >= int(logger.level) {
 		message := fmt.Sprint(v...)
 		message = logger.genLog(level, message)
-		if logger.sync {
-			logger.printLog(message)
-		} else {
-			logger.queue <- message
-		}
+		logger.printLog(message)
 	}
 }
 
@@ -91,11 +91,7 @@ func (logger *Logger) logf(level Level, format string, v ...interface{}) {
 	if int(level) >= int(logger.level) {
 		message := fmt.Sprintf(format, v...)
 		message = logger.genLog(level, message)
-		if logger.sync {
-			logger.printLog(message)
-		} else {
-			logger.queue <- message
-		}
+		logger.printLog(message)
 	}
 }
 
