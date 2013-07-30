@@ -116,22 +116,20 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 
 	// start watcher and timer
 	go logger.watcher()
-	go logger.timer()
 
 	return logger, nil
 }
 
-// Destroy sends quit signal to timer and watcher, and all the other destroy
-// behaviors will be called by watcher.
+// Destroy sends quit signal to timer and watcher.
+// Destroy cleans the logger and releases all the resources.
 func (logger *Logger) Destroy() {
-	// quit timer and watcher
+	// quit watcher
 	logger.quit <- true
-	logger.quit <- true
-}
 
-// destroy cleans the logger and releases all the resources. This function
-// will be called by watcher.
-func (logger *Logger) destroy() {
+	// wait for watcher quit
+	<-logger.quit
+
+	// clean up
 	if logger.fd != nil {
 		logger.fd.Close()
 	}
