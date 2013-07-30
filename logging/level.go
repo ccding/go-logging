@@ -17,7 +17,7 @@
 package logging
 
 // Level is the type of level.
-type Level int
+type Level int32
 
 // Values of level
 const (

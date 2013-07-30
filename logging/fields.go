@@ -114,7 +114,7 @@ func (logger *Logger) nextSeqid(r *record) interface{} {
 
 // Log level number
 func (logger *Logger) levelno(r *record) interface{} {
-	return int(r.level)
+	return int32(r.level)
 }
 
 // Log level name

@@ -19,6 +19,7 @@ package logging
 import (
 	"bytes"
 	"fmt"
+	"sync/atomic"
 	"time"
 )
 
@@ -79,7 +80,7 @@ func (logger *Logger) printLog(message string) {
 
 // log records log v... with level `level'.
 func (logger *Logger) log(level Level, v ...interface{}) {
-	if int(level) >= int(logger.level) {
+	if int32(level) >= atomic.LoadInt32((*int32)(&logger.level)) {
 		message := fmt.Sprint(v...)
 		message = logger.genLog(level, message)
 		logger.printLog(message)
@@ -88,7 +89,7 @@ func (logger *Logger) log(level Level, v ...interface{}) {
 
 // logf records log v... with level `level'.
 func (logger *Logger) logf(level Level, format string, v ...interface{}) {
-	if int(level) >= int(logger.level) {
+	if int32(level) >= atomic.LoadInt32((*int32)(&logger.level)) {
 		message := fmt.Sprintf(format, v...)
 		message = logger.genLog(level, message)
 		logger.printLog(message)

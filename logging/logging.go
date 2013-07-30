@@ -32,6 +32,7 @@ import (
 	"io"
 	"os"
 	"sync"
+	"sync/atomic"
 	"time"
 )
 
@@ -181,11 +182,11 @@ func (logger *Logger) SetTimeFormat(format string) {
 }
 
 func (logger *Logger) Level() Level {
-	return logger.level
+	return Level(atomic.LoadInt32((*int32)(&logger.level)))
 }
 
 func (logger *Logger) SetLevel(level Level) {
-	logger.level = Level(level)
+	atomic.StoreInt32((*int32)(&logger.level), int32(level))
 }
 
 func (logger *Logger) Format() string {
