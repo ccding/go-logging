@@ -132,8 +132,7 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 	return logger, nil
 }
 
-// Destroy sends quit signal to timer and watcher.
-// Destroy cleans the logger and releases all the resources.
+// Destroy sends quit signal to watcher and releases all the resources.
 func (logger *Logger) Destroy() {
 
 	logger.quitWatcher()
