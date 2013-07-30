@@ -46,24 +46,29 @@ const (
 
 // Logger is the logging struct.
 type Logger struct {
+
 	// Be careful of the alignment issue of the variable seqid because it
 	// uses the sync/atomic.AddUint64() operation. If the alignment is
 	// wrong, it will cause a panic. To solve the alignment issue in an
 	// easy way, we put seqid to the beginning of the structure.
-	seqid      uint64
-	name       string
-	level      Level
-	format     string
-	fargs      []string
-	out        io.Writer
-	lock       sync.Mutex
-	startTime  time.Time
-	sync       bool
-	queue      chan string
-	flush      chan bool
-	quit       chan bool
-	fd         *os.File
-	timeFormat string
+	seqid uint64 // last used sequence number in record
+
+	// These variables can be configured by users.
+	name       string    // logger name
+	level      Level     // record level higher than this will be printed
+	format     string    // format of the record
+	fargs      []string  // arguments to be used in the format
+	out        io.Writer // writer
+	startTime  time.Time // start time of the logger
+	sync       bool      // use sync or async way to record logs
+	timeFormat string    // format for time
+
+	// Internal used variables, which don't have get and set functions.
+	lock  sync.Mutex  // writer lock
+	queue chan string // queue used in async logging
+	flush chan bool   // flush signal for the watcher to write
+	quit  chan bool   // quit signal for the watcher to quit
+	fd    *os.File    // file handler, used to close the file on destroy
 }
 
 // SimpleLogger creates a new logger with simple configuration.
