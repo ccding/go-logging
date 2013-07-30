@@ -63,6 +63,7 @@ type Logger struct {
 	flush     chan bool
 	quit      chan bool
 	fd        *os.File
+	timeFormat string
 }
 
 // SimpleLogger creates a new logger with simple configuration.
@@ -113,6 +114,7 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 	logger.quit = make(chan bool)
 	logger.startTime = time.Now()
 	logger.fd = nil
+	logger.timeFormat = "2006-01-02 15:04:05.999999999"
 
 	// start watcher and timer
 	go logger.watcher()
@@ -148,6 +150,14 @@ func (logger *Logger) Name() string {
 
 func (logger *Logger) SetName(name string) {
 	logger.name = name
+}
+
+func (logger *Logger) TimeFormat() string {
+	return logger.timeFormat
+}
+
+func (logger *Logger) SetTimeFormat(format string) {
+	logger.timeFormat = format
 }
 
 func (logger *Logger) Level() Level {

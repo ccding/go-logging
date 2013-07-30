@@ -20,8 +20,8 @@ import "fmt"
 
 // pre-defined formats
 const (
-	BasicFormat = "%s [%6s] %30s - %s\n name,levelname,asctime,message"
-	RichFormat  = "%s [%6s] %d %30s - %d - %s:%s:%d - %s\n name, levelname, seqid, asctime, thread, filename, funcname, lineno, message"
+	BasicFormat = "%s [%6s] %30s - %s\n name,levelname,time,message"
+	RichFormat  = "%s [%6s] %d %30s - %d - %s:%s:%d - %s\n name, levelname, seqid, time, thread, filename, funcname, lineno, message"
 )
 
 // genLog generates log string from the format setting.

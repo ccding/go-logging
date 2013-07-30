@@ -53,7 +53,7 @@ var fields = map[string]func(*Logger, *record) interface{}{
 	"lineno":          (*Logger).lineno,
 	"funcname":        (*Logger).funcname,
 	"created":         (*Logger).created,
-	"asctime":         (*Logger).asctime,
+	"time":            (*Logger).time,
 	"msecs":           (*Logger).msecs,
 	"relativeCreated": (*Logger).relativeCreated,
 	"thread":          (*Logger).thread,
@@ -167,11 +167,11 @@ func (logger *Logger) created(r *record) interface{} {
 }
 
 // RFC3339Nano time
-func (logger *Logger) asctime(r *record) interface{} {
+func (logger *Logger) time(r *record) interface{} {
 	if r.time.IsZero() {
 		r.time = time.Now()
 	}
-	return r.time.Format("2006-01-02 15:04:05.999999999")
+	return r.time.Format(logger.timeFormat)
 }
 
 // Nanosecond of starting time
