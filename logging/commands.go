@@ -22,52 +22,44 @@ import (
 	"time"
 )
 
-// timer generate flush signal to the logger.flush channel, which makes
-// watchLog be able to write logs to output periodically.
-func (logger *Logger) timer() {
-	for {
-		time.Sleep(time.Second / 10)
-		select {
-		case <-logger.quit:
-			return
-		case logger.flush <- true:
-		}
-	}
-}
-
 // watcher watches the logger.queue channel, and writes the logs to output
 func (logger *Logger) watcher() {
 	var buf bytes.Buffer
 	for {
-		for i := 0; i < 1000; i++ {
+		timeout := time.After(time.Second / 10)
+
+		for i := 0; i < queueSize; i++ {
 			select {
 			case msg := <-logger.queue:
 				fmt.Fprintln(&buf, msg)
+			case <-timeout:
+				i = queueSize
 			case <-logger.flush:
-				logger.out.Write(buf.Bytes())
-				buf.Reset()
+				i = queueSize
 			case <-logger.quit:
 				// If quit signal received, cleans the channel
-				// and writes all of them to io.Writer. It
-				// calls destroy() finally to clean the
-				// logger.
+				// and writes all of them to io.Writer.
 				for {
 					select {
 					case msg := <-logger.queue:
 						fmt.Fprintln(&buf, msg)
 					default:
-						logger.out.Write(buf.Bytes())
-						buf.Reset()
-						logger.destroy()
+						logger.flushBuf(&buf)
+						logger.quit <- true
 						return
 					}
 				}
 			}
 
 		}
-		logger.out.Write(buf.Bytes())
-		buf.Reset()
+		logger.flushBuf(&buf)
 	}
+}
+
+// FlushBuf flushes the content of buffer to out and reset the buffer
+func (logger *Logger) flushBuf(b *bytes.Buffer) {
+	logger.out.Write(b.Bytes())
+	b.Reset()
 }
 
 // printLog is to print log to file, stdout, or others.
