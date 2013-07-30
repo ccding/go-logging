@@ -17,7 +17,6 @@
 package logging
 
 import (
-	"fmt"
 	"os"
 	"path"
 	"runtime"
@@ -27,18 +26,17 @@ import (
 
 // The struct for each log record
 type record struct {
-	level      Level
-	seqid      uint64
-	pathname   string
-	filename   string
-	module     string
-	lineno     int
-	funcname   string
-	thread     int
-	threadName string
-	process    int
-	message    string
-	time       time.Time
+	level    Level
+	seqid    uint64
+	pathname string
+	filename string
+	module   string
+	lineno   int
+	funcname string
+	thread   int
+	process  int
+	message  string
+	time     time.Time
 }
 
 // This variable maps fields in format to relavent function signatures
@@ -57,7 +55,6 @@ var fields = map[string]func(*Logger, *record) interface{}{
 	"msecs":           (*Logger).msecs,
 	"relativeCreated": (*Logger).relativeCreated,
 	"thread":          (*Logger).thread,
-	"threadName":      (*Logger).threadName,
 	"process":         (*Logger).process,
 	"message":         (*Logger).message,
 	"timestamp":       (*Logger).timestamp,
@@ -201,14 +198,6 @@ func (logger *Logger) thread(r *record) interface{} {
 		r.thread = int(GetGoID())
 	}
 	return r.thread
-}
-
-// Thread name
-func (logger *Logger) threadName(r *record) interface{} {
-	if r.threadName == "" {
-		r.threadName = fmt.Sprintf("Thread-%d", GetGoID())
-	}
-	return r.threadName
 }
 
 // Process ID

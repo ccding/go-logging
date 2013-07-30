@@ -50,19 +50,19 @@ type Logger struct {
 	// uses the sync/atomic.AddUint64() operation. If the alignment is
 	// wrong, it will cause a panic. To solve the alignment issue in an
 	// easy way, we put seqid to the beginning of the structure.
-	seqid     uint64
-	name      string
-	level     Level
-	format    string
-	fargs     []string
-	out       io.Writer
-	lock      sync.Mutex
-	startTime time.Time
-	sync      bool
-	queue     chan string
-	flush     chan bool
-	quit      chan bool
-	fd        *os.File
+	seqid      uint64
+	name       string
+	level      Level
+	format     string
+	fargs      []string
+	out        io.Writer
+	lock       sync.Mutex
+	startTime  time.Time
+	sync       bool
+	queue      chan string
+	flush      chan bool
+	quit       chan bool
+	fd         *os.File
 	timeFormat string
 }
 
