@@ -33,7 +33,7 @@ type record struct {
 	filename   string
 	module     string
 	lineno     int
-	funcName   string
+	funcname   string
 	thread     int
 	threadName string
 	process    int
@@ -51,7 +51,7 @@ var fields = map[string]func(*Logger, *record) interface{}{
 	"filename":        (*Logger).filename,
 	"module":          (*Logger).module,
 	"lineno":          (*Logger).lineno,
-	"funcName":        (*Logger).funcName,
+	"funcname":        (*Logger).funcname,
 	"created":         (*Logger).created,
 	"asctime":         (*Logger).asctime,
 	"msecs":           (*Logger).msecs,
@@ -87,12 +87,12 @@ func genRuntime(r *record) {
 		}
 
 		r.pathname = file
-		r.funcName = fshort
+		r.funcname = fshort
 		r.filename = path.Base(file)
 		r.lineno = line
 	} else {
 		r.pathname = errString
-		r.funcName = errString
+		r.funcname = errString
 		r.filename = errString
 		// Here we uses -1 rather than 0, because the default value in
 		// golang is 0 and we should know the value is uninitialized
@@ -154,11 +154,11 @@ func (logger *Logger) lineno(r *record) interface{} {
 }
 
 // Function name
-func (logger *Logger) funcName(r *record) interface{} {
-	if r.funcName == "" {
+func (logger *Logger) funcname(r *record) interface{} {
+	if r.funcname == "" {
 		genRuntime(r)
 	}
-	return r.funcName
+	return r.funcname
 }
 
 // Timestamp of starting time
