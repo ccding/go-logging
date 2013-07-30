@@ -16,8 +16,6 @@
 //
 package logging
 
-import "sync"
-
 // Level is the type of level.
 type Level int
 
@@ -53,8 +51,6 @@ var levelValues = map[string]Level{
 	"DEBUG":    DEBUG,
 	"NOTSET":   NOTSET,
 }
-
-var levelLock sync.Mutex
 
 // String function casts level value to string
 func (level *Level) String() string {
