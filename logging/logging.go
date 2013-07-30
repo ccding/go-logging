@@ -39,10 +39,11 @@ import (
 
 // Pre-defined formats
 const (
-	defaultFileName = "logging.log"  // default logging filename
-	configFileName  = "logging.conf" // default configuration filename
-	bufSize         = 1000           // buffer size for writer
-	queueSize       = 1000           // chan queue size in async logging
+	defaultFileName   = "logging.log"                   // default logging filename
+	configFileName    = "logging.conf"                  // default configuration filename
+	defaultTimeFormat = "2006-01-02 15:04:05.999999999" // defaulttime format
+	bufSize           = 1000                            // buffer size for writer
+	queueSize         = 1000                            // chan queue size in async logging
 )
 
 // Logger is the logging struct.
@@ -52,6 +53,7 @@ type Logger struct {
 	// uses the sync/atomic.AddUint64() operation. If the alignment is
 	// wrong, it will cause a panic. To solve the alignment issue in an
 	// easy way, we put seqid to the beginning of the structure.
+	// seqid is only visiable internally.
 	seqid uint64 // last used sequence number in record
 
 	// These variables can be configured by users.
@@ -120,7 +122,7 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 	logger.quit = make(chan bool)
 	logger.startTime = time.Now()
 	logger.fd = nil
-	logger.timeFormat = "2006-01-02 15:04:05.999999999"
+	logger.timeFormat = defaultTimeFormat
 
 	// start watcher and timer
 	go logger.watcher()
