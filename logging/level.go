@@ -70,16 +70,3 @@ func GetLevelName(levelValue Level) string {
 func GetLevelValue(levelName string) Level {
 	return levelValues[levelName]
 }
-
-// AddLevel adds a new level to the level list.
-func AddLevel(levelName string, levelValue Level) {
-	SetLevel(levelName, levelValue)
-}
-
-// SetLevel updates existing levels.
-func SetLevel(levelName string, levelValue Level) {
-	levelLock.Lock()
-	defer levelLock.Unlock()
-	levelValues[levelName] = levelValue
-	levelNames[levelValue] = levelName
-}
