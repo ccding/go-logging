@@ -41,23 +41,23 @@ type record struct {
 
 // This variable maps fields in format to relavent function signatures
 var fields = map[string]func(*Logger, *record) interface{}{
-	"name":            (*Logger).lname,           // name of the logger
-	"seqid":           (*Logger).nextSeqid,       // sequence number
-	"levelno":         (*Logger).levelno,         // level number
-	"levelname":       (*Logger).levelname,       // level name
-	"filename":        (*Logger).filename,        // source filename of the caller
-	"pathname":        (*Logger).pathname,        // filename with path
-	"module":          (*Logger).module,          // executable filename
-	"lineno":          (*Logger).lineno,          // line number in source code
-	"funcname":        (*Logger).funcname,        // function name of the caller
-	"created":         (*Logger).created,         // starting time of the logger
-	"time":            (*Logger).time,            // record created time
-	"msecs":           (*Logger).msecs,           // nanosecond of the starting time
-	"relativeCreated": (*Logger).relativeCreated, // nanoseconds since started
-	"thread":          (*Logger).thread,          // thread id
-	"process":         (*Logger).process,         // process id
-	"message":         (*Logger).message,         // logger message
-	"timestamp":       (*Logger).timestamp,       // timestamp of record
+	"name":      (*Logger).lname,     // name of the logger
+	"seqid":     (*Logger).nextSeqid, // sequence number
+	"levelno":   (*Logger).levelno,   // level number
+	"levelname": (*Logger).levelname, // level name
+	"created":   (*Logger).created,   // starting time of the logger
+	"nsecs":     (*Logger).nsecs,     // nanosecond of the starting time
+	"time":      (*Logger).time,      // record created time
+	"timestamp": (*Logger).timestamp, // timestamp of record
+	"rtime":     (*Logger).rtime,     // relative time since started
+	"filename":  (*Logger).filename,  // source filename of the caller
+	"pathname":  (*Logger).pathname,  // filename with path
+	"module":    (*Logger).module,    // executable filename
+	"lineno":    (*Logger).lineno,    // line number in source code
+	"funcname":  (*Logger).funcname,  // function name of the caller
+	"thread":    (*Logger).thread,    // thread id
+	"process":   (*Logger).process,   // process id
+	"message":   (*Logger).message,   // logger message
 }
 
 // If it fails to get some fields with string type, these fields are set to
@@ -172,7 +172,7 @@ func (logger *Logger) time(r *record) interface{} {
 }
 
 // Nanosecond of starting time
-func (logger *Logger) msecs(r *record) interface{} {
+func (logger *Logger) nsecs(r *record) interface{} {
 	return logger.startTime.Nanosecond()
 }
 
@@ -185,7 +185,7 @@ func (logger *Logger) timestamp(r *record) interface{} {
 }
 
 // Nanoseconds since logger created
-func (logger *Logger) relativeCreated(r *record) interface{} {
+func (logger *Logger) rtime(r *record) interface{} {
 	if r.time.IsZero() {
 		r.time = time.Now()
 	}
