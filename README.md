@@ -99,13 +99,25 @@ WriterLogger(name string, level Level, format string, out io.Writer, sync bool) 
 ```
 The meanings of these fields are
 ```
-name       string     logger name
-level      Level      record level higher than this will be printed
-format     string     format configuration
-out        io.Writer  writer
-startTime  time.Time  start time of the logger
-sync       bool       use sync or async way to record logs
-timeFormat string     format for time
+name           string         logger name
+level          Level          record level higher than this will be printed
+format         string         format configuration
+out            io.Writer      writer
+startTime      time.Time      start time of the logger
+sync           bool           use sync or async way to record logs
+timeFormat     string         format for time
+```
+
+There are these levels in logging.
+```
+CRITICAL     50
+FATAL        CRITICAL
+ERROR        40
+WARNING      30
+WARN         WARNING
+INFO         20
+DEBUG        10
+NOTSET       0
 ```
 
 It has these functions to operate on the logger:
