@@ -43,6 +43,8 @@ func (logger *Logger) watcher() {
 					select {
 					case msg := <-logger.queue:
 						fmt.Fprintln(&buf, msg)
+					case <-logger.flush:
+						// do nothing
 					default:
 						logger.flushBuf(&buf)
 						logger.quit <- true
@@ -58,8 +60,10 @@ func (logger *Logger) watcher() {
 
 // FlushBuf flushes the content of buffer to out and reset the buffer
 func (logger *Logger) flushBuf(b *bytes.Buffer) {
-	logger.out.Write(b.Bytes())
-	b.Reset()
+	if len(b.Bytes()) > 0 {
+		logger.out.Write(b.Bytes())
+		b.Reset()
+	}
 }
 
 // printLog is to print log to file, stdout, or others.
