@@ -38,6 +38,8 @@ func (logger *Logger) watcher() {
 			case <-timeout:
 				break
 			case <-logger.flush:
+				logger.flushBuf(&buf)
+				logger.flush <- true
 				break
 			case <-logger.quit:
 				// If quit signal received, cleans the channel
