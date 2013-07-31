@@ -34,17 +34,7 @@ func (logger *Logger) watcher() {
 			case msg := <-logger.queue:
 				fmt.Fprintln(&buf, msg)
 			case req := <-logger.request:
-				if int32(req.level) >= atomic.LoadInt32((*int32)(&logger.level)) {
-					if req.format == "" {
-						msg := fmt.Sprint(req.v...)
-						msg = logger.genLog(req.level, msg)
-						fmt.Fprintln(&buf, msg)
-					} else {
-						msg := fmt.Sprintf(req.format, req.v...)
-						msg = logger.genLog(req.level, msg)
-						fmt.Fprintln(&buf, msg)
-					}
-				}
+				logger.flushReq(&buf, &req)
 			case <-timeout:
 				break
 			case <-logger.flush:
@@ -56,6 +46,8 @@ func (logger *Logger) watcher() {
 					select {
 					case msg := <-logger.queue:
 						fmt.Fprintln(&buf, msg)
+					case req := <-logger.request:
+						logger.flushReq(&buf, &req)
 					case <-logger.flush:
 						// do nothing
 					default:
@@ -76,6 +68,20 @@ func (logger *Logger) flushBuf(b *bytes.Buffer) {
 	if len(b.Bytes()) > 0 {
 		logger.out.Write(b.Bytes())
 		b.Reset()
+	}
+}
+
+func (logger *Logger) flushReq(b *bytes.Buffer, req *request) {
+	if int32(req.level) >= atomic.LoadInt32((*int32)(&logger.level)) {
+		if req.format == "" {
+			msg := fmt.Sprint(req.v...)
+			msg = logger.genLog(req.level, msg)
+			fmt.Fprintln(b, msg)
+		} else {
+			msg := fmt.Sprintf(req.format, req.v...)
+			msg = logger.genLog(req.level, msg)
+			fmt.Fprintln(b, msg)
+		}
 	}
 }
 
