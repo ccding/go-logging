@@ -77,13 +77,6 @@ type Logger struct {
 	runtime bool         // with runtime operation or not
 }
 
-// request struct stores the logger request
-type request struct {
-	level  Level
-	format string
-	v      []interface{}
-}
-
 // SimpleLogger creates a new logger with simple configuration.
 func SimpleLogger(name string) (*Logger, error) {
 	return createLogger(name, WARNING, BasicFormat, DefaultTimeFormat, os.Stdout, false)
