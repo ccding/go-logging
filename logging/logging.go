@@ -39,7 +39,6 @@ import (
 // Pre-defined formats
 const (
 	DefaultFileName       = "logging.log"                   // default logging filename
-	DefaultConfigFileName = "logging.conf"                  // default configuration filename
 	DefaultTimeFormat     = "2006-01-02 15:04:05.999999999" // defaulttime format
 	bufSize               = 1000                            // buffer size for writer
 	queueSize             = 10000                           // chan queue size in async logging
