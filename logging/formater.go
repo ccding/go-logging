@@ -30,17 +30,17 @@ const (
 
 // genLog generates log string from the format setting.
 func (logger *Logger) genLog(level Level, message string) string {
-	fs := make([]interface{}, len(logger.fargs))
+	fs := make([]interface{}, len(logger.rargs))
 	r := new(record)
 	r.message = message
 	r.level = level
-	for k, v := range logger.fargs {
+	for k, v := range logger.rargs {
 		fs[k] = fields[v](logger, r)
 	}
 	return fmt.Sprintf(logger.format, fs...)
 }
 
-// parseFormat checks the legality of format and parses it to format and fargs
+// parseFormat checks the legality of format and parses it to format and rargs
 func (logger *Logger) parseFormat(format string) error {
 	logger.runtime = false
 	fts := strings.Split(format, "\n")
@@ -48,14 +48,14 @@ func (logger *Logger) parseFormat(format string) error {
 		return errors.New("logging format error")
 	}
 	logger.format = fts[0]
-	logger.fargs = strings.Split(fts[1], ",")
-	for k, v := range logger.fargs {
+	logger.rargs = strings.Split(fts[1], ",")
+	for k, v := range logger.rargs {
 		tv := strings.TrimSpace(v)
 		_, ok := fields[tv]
 		if ok == false {
 			return errors.New("logging format error")
 		}
-		logger.fargs[k] = tv
+		logger.rargs[k] = tv
 		logger.runtime = logger.runtime || runtimeFields[tv]
 	}
 	return nil

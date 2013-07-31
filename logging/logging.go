@@ -61,7 +61,7 @@ type Logger struct {
 	name       string    // logger name
 	level      Level     // record level higher than this will be printed
 	format     string    // format of the record
-	fargs      []string  // arguments to be used in the format
+	rargs      []string  // arguments to be used in the format
 	out        io.Writer // writer
 	startTime  time.Time // start time of the logger
 	sync       bool      // use sync or async way to record logs
@@ -203,7 +203,7 @@ func (logger *Logger) Format() string {
 }
 
 func (logger *Logger) Fargs() []string {
-	return logger.fargs
+	return logger.rargs
 }
 
 func (logger *Logger) SetFormat(format string) error {
