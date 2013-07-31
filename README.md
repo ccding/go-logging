@@ -224,5 +224,3 @@ In alphabetical order
 
 ## TODO List
 1. logging server
-
-2. read configuration from file
