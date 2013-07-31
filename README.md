@@ -119,26 +119,21 @@ thread-safe.
 ```
 
 #### Getters and Setters
-The logger supports the following getter and setter operations, all of which
-(except Level and SetLevel) are not thread-safe. If you are calling them in
-multiple threads, please be sure locking them properly.
+The logger supports the following getter and setter operations.
+In these functions, `SetWriter` is not thread-safe, while others are.
 ```go
+// Getter functions
 (*Logger) Name() string                    // get name
-(*Logger) SetName(name string)             // set name
 (*Logger) TimeFormat() string              // get time format
-(*Logger) SetTimeFormat(format string)     // set time format
 (*Logger) Level() Level                    // get level  [this function is thread safe]
-(*Logger) SetLevel(level Level)            // set level  [this function is thread safe]
-(*Logger) Format() string                  // get the first part of the format
-(*Logger) Fargs() []string                 // get the second part of the format
-(*Logger) SetFormat(format string) error   // set format
+(*Logger) Rfmt() string                  // get the first part of the format
+(*Logger) Rargs() []string                 // get the second part of the format
 (*Logger) Writer() io.Writer               // get writer
-(*Logger) AddWriter(out io.Writer)         // add writer
-(*Logger) AddWriters(out ...io.Writer)     // add multiple writers
-(*Logger) SetWriter(out io.Writer)         // set writer
-(*Logger) SetWriters(out ...io.Writer)     // set multiple writers
 (*Logger) Sync() bool                      // get sync or async
-(*Logger) SetSync(sync bool)               // set to sync or async
+
+// Setter functions
+(*Logger) SetLevel(level Level)            // set level  [this function is thread safe]
+(*Logger) SetWriter(out ...io.Writer)      // set multiple writers
 ```
 
 #### Record Format
