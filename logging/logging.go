@@ -145,9 +145,9 @@ func ConfigLogger(filename string) (*Logger, error) {
 	if !ok {
 		ssync = "0"
 	}
-	file, ok := conf["sync"]
+	file, ok := conf["file"]
 	if !ok {
-		file = DefaultConfigFile
+		file = DefaultFileName
 	}
 	sync := true
 	if ssync == "0" {
