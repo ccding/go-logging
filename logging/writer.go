@@ -87,8 +87,8 @@ func (logger *Logger) flushReq(b *bytes.Buffer, req *request) {
 	}
 }
 
-// printLog is to print log to file, stdout, or others.
-func (logger *Logger) printLog(message string) {
+// flushMsg is to print log to file, stdout, or others.
+func (logger *Logger) flushMsg(message string) {
 	if logger.sync {
 		logger.wlock.Lock()
 		defer logger.wlock.Unlock()
@@ -104,7 +104,7 @@ func (logger *Logger) log(level Level, v ...interface{}) {
 		if int32(level) >= atomic.LoadInt32((*int32)(&logger.level)) {
 			message := fmt.Sprint(v...)
 			message = logger.genLog(level, message)
-			logger.printLog(message)
+			logger.flushMsg(message)
 		}
 	} else {
 		r := new(request)
@@ -120,7 +120,7 @@ func (logger *Logger) logf(level Level, format string, v ...interface{}) {
 		if int32(level) >= atomic.LoadInt32((*int32)(&logger.level)) {
 			message := fmt.Sprintf(format, v...)
 			message = logger.genLog(level, message)
-			logger.printLog(message)
+			logger.flushMsg(message)
 		}
 	} else {
 		r := new(request)
