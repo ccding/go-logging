@@ -22,12 +22,12 @@ import (
 )
 
 func main() {
-	logger, _ := logging.SimpleLogger("main")
-	logger.SetLevel(logging.NOTSET)
-	logger.Error("this is a test from error")
-	logger.Debug("this is a test from debug")
-	logger.Notset("orz", time.Now().UnixNano())
-	logger.Destroy()
+	logger1, _ := logging.SimpleLogger("main")
+	logger1.SetLevel(logging.NOTSET)
+	logger1.Error("this is a test from error")
+	logger1.Debug("this is a test from debug")
+	logger1.Notset("orz", time.Now().UnixNano())
+	logger1.Destroy()
 
 	logger2, _ := logging.RichLogger("main")
 	logger2.SetLevel(logging.DEBUG)
@@ -35,4 +35,11 @@ func main() {
 	logger2.Debug("this is a test from debug")
 	logger2.Notset("orz", time.Now().UnixNano())
 	logger2.Destroy()
+
+	logger3, _ := logging.ConfigLogger("example.conf")
+	logger3.SetLevel(logging.DEBUG)
+	logger3.Error("this is a test from error")
+	logger3.Debug("this is a test from debug")
+	logger3.Notset("orz", time.Now().UnixNano())
+	logger3.Destroy()
 }
