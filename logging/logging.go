@@ -208,6 +208,6 @@ func (logger *Logger) SetLevel(level Level) {
 	atomic.StoreInt32((*int32)(&logger.level), int32(level))
 }
 
-func (logger *Logger) SetWriters(out ...io.Writer) {
+func (logger *Logger) SetWriter(out ...io.Writer) {
 	logger.out = io.MultiWriter(out...)
 }
