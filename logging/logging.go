@@ -170,7 +170,7 @@ func (logger *Logger) Flush() {
 	}
 }
 
-// Get and set the configuration of the logger
+// Getter functions
 
 func (logger *Logger) Name() string {
 	return logger.name
@@ -182,10 +182,6 @@ func (logger *Logger) TimeFormat() string {
 
 func (logger *Logger) Level() Level {
 	return Level(atomic.LoadInt32((*int32)(&logger.level)))
-}
-
-func (logger *Logger) SetLevel(level Level) {
-	atomic.StoreInt32((*int32)(&logger.level), int32(level))
 }
 
 func (logger *Logger) Format() string {
@@ -200,22 +196,16 @@ func (logger *Logger) Writer() io.Writer {
 	return logger.out
 }
 
-func (logger *Logger) AddWriter(out io.Writer) {
-	logger.out = io.MultiWriter(logger.out, out)
+func (logger *Logger) Sync() bool {
+	return logger.sync
 }
 
-func (logger *Logger) AddWriters(out ...io.Writer) {
-	logger.out = io.MultiWriter(append(out, logger.out)...)
-}
+// Setter functions
 
-func (logger *Logger) SetWriter(out io.Writer) {
-	logger.out = out
+func (logger *Logger) SetLevel(level Level) {
+	atomic.StoreInt32((*int32)(&logger.level), int32(level))
 }
 
 func (logger *Logger) SetWriters(out ...io.Writer) {
 	logger.out = io.MultiWriter(out...)
-}
-
-func (logger *Logger) Sync() bool {
-	return logger.sync
 }
