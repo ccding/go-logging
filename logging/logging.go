@@ -186,11 +186,11 @@ func (logger *Logger) Level() Level {
 	return Level(atomic.LoadInt32((*int32)(&logger.level)))
 }
 
-func (logger *Logger) Format() string {
+func (logger *Logger) Rfmt() string {
 	return logger.rfmt
 }
 
-func (logger *Logger) Fargs() []string {
+func (logger *Logger) Rargs() []string {
 	return logger.rargs
 }
 
