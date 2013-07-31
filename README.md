@@ -63,18 +63,18 @@ BasicLogger(name string) (*Logger, error)
 // with RichFormatand writing to DefaultFileName
 RichLogger(name string) (*Logger, error)
 // with detailed configuration and writing to file
-FileLogger(name string, level Level, format string, file string, sync bool) (*Logger, error)
+FileLogger(name string, level Level, format string, timeFormat string, file string, sync bool) (*Logger, error)
 // with detailed configuration and writing to a writer
-WriterLogger(name string, level Level, format string, out io.Writer, sync bool) (*Logger, error)
+WriterLogger(name string, level Level, format string, timeFormat string, out io.Writer, sync bool) (*Logger, error)
 ```
 The meanings of these fields are
 ```go
 name           string        // logger name
 level          Level         // record level higher than this will be printed
 format         string        // format configuration
+timeFormat     string        // format for time
 out            io.Writer     // writer
 sync           bool          // use sync or async way to record logs
-timeFormat     string        // format for time
 ```
 The defaule timeFormat is
 ```go
@@ -95,7 +95,7 @@ NOTSET       0
 ```
 
 #### Logging Functions
-It supports the following operations for logging. All of these functions are
+It supports the following functions for logging. All of these functions are
 thread-safe.
 ```go
 (*Logger) Logf(level Level, format string, v ...interface{})
@@ -118,7 +118,7 @@ thread-safe.
 (*Logger) Notset(v ...interface{})
 ```
 
-#### Operations
+#### Logger Operations
 The logger supports the following operations.  In these functions, `SetWriter`
 and `Destroy` are not thread-safe, while others are. All these functions are
 running in a synchronous way.
