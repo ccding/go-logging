@@ -37,17 +37,17 @@ func (logger *Logger) genLog(level Level, message string) string {
 	for k, v := range logger.rargs {
 		fs[k] = fields[v](logger, r)
 	}
-	return fmt.Sprintf(logger.format, fs...)
+	return fmt.Sprintf(logger.rfmt, fs...)
 }
 
-// parseFormat checks the legality of format and parses it to format and rargs
+// parseFormat checks the legality of format and parses it to rfmt and rargs
 func (logger *Logger) parseFormat(format string) error {
 	logger.runtime = false
 	fts := strings.Split(format, "\n")
 	if len(fts) != 2 {
 		return errors.New("logging format error")
 	}
-	logger.format = fts[0]
+	logger.rfmt = fts[0]
 	logger.rargs = strings.Split(fts[1], ",")
 	for k, v := range logger.rargs {
 		tv := strings.TrimSpace(v)

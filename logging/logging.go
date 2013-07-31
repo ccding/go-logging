@@ -60,8 +60,8 @@ type Logger struct {
 	// These variables can be configured by users.
 	name       string    // logger name
 	level      Level     // record level higher than this will be printed
-	format     string    // format of the record
-	rargs      []string  // arguments to be used in the format
+	rfmt       string    // format of the record
+	rargs      []string  // arguments to be used in the rfmt
 	out        io.Writer // writer
 	startTime  time.Time // start time of the logger
 	sync       bool      // use sync or async way to record logs
@@ -199,7 +199,7 @@ func (logger *Logger) SetLevel(level Level) {
 }
 
 func (logger *Logger) Format() string {
-	return logger.format
+	return logger.rfmt
 }
 
 func (logger *Logger) Fargs() []string {
