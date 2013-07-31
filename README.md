@@ -8,7 +8,7 @@ A high-performance logging library for golang.
 The step below will download the library source code to
 `${GOPATH}/src/github.com/ccding/go-logging`.
 ```bash
-go get github.com/ccding/go-logging
+go get github.com/ccding/go-logging/logging
 ```
 
 Given the source code downloaded, it makes you be able to run the examples,
@@ -24,7 +24,7 @@ go test -v -bench .
 go-logging is used like any other Go libraries. You can simply use the library
 in this way.
 ```go
-import "github.com/ccding/go-logging"
+import "github.com/ccding/go-logging/logging"
 ```
 
 Here is a simple example.
@@ -32,7 +32,7 @@ Here is a simple example.
 package main
 
 import (
-	"github.com/ccding/go-logging"
+	"github.com/ccding/go-logging/logging"
 )
 
 func main() {
