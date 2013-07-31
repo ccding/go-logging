@@ -36,11 +36,11 @@ func (logger *Logger) watcher() {
 			case req := <-logger.request:
 				logger.flushReq(&buf, &req)
 			case <-timeout:
-				break
+				i = bufSize
 			case <-logger.flush:
 				logger.flushBuf(&buf)
 				logger.flush <- true
-				break
+				i = bufSize
 			case <-logger.quit:
 				// If quit signal received, cleans the channel
 				// and writes all of them to io.Writer.
@@ -59,7 +59,6 @@ func (logger *Logger) watcher() {
 					}
 				}
 			}
-
 		}
 		logger.flushBuf(&buf)
 	}
