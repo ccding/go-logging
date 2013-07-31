@@ -75,16 +75,14 @@ func (logger *Logger) flushBuf(b *bytes.Buffer) {
 
 // flushReq handles the request and writes the result to writer
 func (logger *Logger) flushReq(b *bytes.Buffer, req *request) {
-	if int32(req.level) >= atomic.LoadInt32((*int32)(&logger.level)) {
-		if req.format == "" {
-			msg := fmt.Sprint(req.v...)
-			msg = logger.genLog(req.level, msg)
-			fmt.Fprintln(b, msg)
-		} else {
-			msg := fmt.Sprintf(req.format, req.v...)
-			msg = logger.genLog(req.level, msg)
-			fmt.Fprintln(b, msg)
-		}
+	if req.format == "" {
+		msg := fmt.Sprint(req.v...)
+		msg = logger.genLog(req.level, msg)
+		fmt.Fprintln(b, msg)
+	} else {
+		msg := fmt.Sprintf(req.format, req.v...)
+		msg = logger.genLog(req.level, msg)
+		fmt.Fprintln(b, msg)
 	}
 }
 
@@ -101,33 +99,33 @@ func (logger *Logger) flushMsg(message string) {
 
 // log records log v... with level `level'.
 func (logger *Logger) log(level Level, v ...interface{}) {
-	if logger.runtime || logger.sync {
-		if int32(level) >= atomic.LoadInt32((*int32)(&logger.level)) {
+	if int32(level) >= atomic.LoadInt32((*int32)(&logger.level)) {
+		if logger.runtime || logger.sync {
 			message := fmt.Sprint(v...)
 			message = logger.genLog(level, message)
 			logger.flushMsg(message)
+		} else {
+			r := new(request)
+			r.level = level
+			r.v = v
+			logger.request <- *r
 		}
-	} else {
-		r := new(request)
-		r.level = level
-		r.v = v
-		logger.request <- *r
 	}
 }
 
 // logf records log v... with level `level'.
 func (logger *Logger) logf(level Level, format string, v ...interface{}) {
-	if logger.runtime || logger.sync {
-		if int32(level) >= atomic.LoadInt32((*int32)(&logger.level)) {
+	if int32(level) >= atomic.LoadInt32((*int32)(&logger.level)) {
+		if logger.runtime || logger.sync {
 			message := fmt.Sprintf(format, v...)
 			message = logger.genLog(level, message)
 			logger.flushMsg(message)
+		} else {
+			r := new(request)
+			r.level = level
+			r.format = format
+			r.v = v
+			logger.request <- *r
 		}
-	} else {
-		r := new(request)
-		r.level = level
-		r.format = format
-		r.v = v
-		logger.request <- *r
 	}
 }
