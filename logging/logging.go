@@ -42,7 +42,8 @@ const (
 	DefaultConfigFileName = "logging.conf"                  // default configuration filename
 	DefaultTimeFormat     = "2006-01-02 15:04:05.999999999" // defaulttime format
 	bufSize               = 1000                            // buffer size for writer
-	queueSize             = 1e6                             // chan queue size in async logging
+	queueSize             = 10000                           // chan queue size in async logging
+	reqSize               = 10000                           // chan queue size in async logging
 )
 
 // Logger is the logging struct.
@@ -130,7 +131,7 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 	logger.seqid = 0
 	logger.sync = sync
 	logger.queue = make(chan string, queueSize)
-	logger.request = make(chan request, queueSize)
+	logger.request = make(chan request, reqSize)
 	logger.flush = make(chan bool)
 	logger.quit = make(chan bool)
 	logger.startTime = time.Now()
