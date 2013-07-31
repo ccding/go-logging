@@ -40,7 +40,7 @@ type record struct {
 	time     time.Time
 }
 
-// This variable maps fields in rargs to relavent function signatures
+// This variable maps fields in recordArgs to relavent function signatures
 var fields = map[string]func(*Logger, *record) interface{}{
 	"name":      (*Logger).lname,     // name of the logger
 	"seqid":     (*Logger).nextSeqid, // sequence number

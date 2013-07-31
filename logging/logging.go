@@ -57,13 +57,13 @@ type Logger struct {
 	seqid uint64 // last used sequence number in record
 
 	// These variables can be configured by users.
-	name       string    // logger name
-	level      Level     // record level higher than this will be printed
-	rfmt       string    // format of the record
-	rargs      []string  // arguments to be used in the rfmt
-	out        io.Writer // writer
-	sync       bool      // use sync or async way to record logs
-	timeFormat string    // format for time
+	name         string    // logger name
+	level        Level     // record level higher than this will be printed
+	recordFormat string    // format of the record
+	recordArgs   []string  // arguments to be used in the recordFormat
+	out          io.Writer // writer
+	sync         bool      // use sync or async way to record logs
+	timeFormat   string    // format for time
 
 	// These variables are visible to users.
 	startTime time.Time // start time of the logger
@@ -186,12 +186,12 @@ func (logger *Logger) Level() Level {
 	return Level(atomic.LoadInt32((*int32)(&logger.level)))
 }
 
-func (logger *Logger) Rfmt() string {
-	return logger.rfmt
+func (logger *Logger) RecordFormat() string {
+	return logger.recordFormat
 }
 
-func (logger *Logger) Rargs() []string {
-	return logger.rargs
+func (logger *Logger) RecordArgs() []string {
+	return logger.recordArgs
 }
 
 func (logger *Logger) Writer() io.Writer {
