@@ -151,19 +151,15 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 
 // Destroy sends quit signal to watcher and releases all the resources.
 func (logger *Logger) Destroy() {
-	logger.quitWatcher()
-	// clean up
-	if logger.fd != nil {
-		logger.fd.Close()
-	}
-}
-
-func (logger *Logger) quitWatcher() {
 	if !logger.sync {
 		// quit watcher
 		logger.quit <- true
 		// wait for watcher quit
 		<-logger.quit
+	}
+	// clean up
+	if logger.fd != nil {
+		logger.fd.Close()
 	}
 }
 
