@@ -63,11 +63,13 @@ type Logger struct {
 	rfmt       string    // format of the record
 	rargs      []string  // arguments to be used in the rfmt
 	out        io.Writer // writer
-	startTime  time.Time // start time of the logger
 	sync       bool      // use sync or async way to record logs
 	timeFormat string    // format for time
 
-	// Internal used variables, which don't have get and set functions.
+	// These variables are visible to users.
+	startTime  time.Time // start time of the logger
+
+	// Internally used variables, which don't have get and set functions.
 	lock    sync.Mutex   // writer lock
 	queue   chan string  // queue used in async logging
 	request chan request // queue used in non-runtime logging
