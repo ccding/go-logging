@@ -1,9 +1,18 @@
 #go-logging
-A high-performance logging library for golang.
-* Simple: it supports only necessary operations
-* Fast: it is very efficient and under improvement
+go-logging is a high-performance logging library for golang.
+* Simple: It supports only necessary operations and easy to get start.
+* Fast: Asynchronous logging without runtime-related fields has an extremely
+  low delay of about 800 nano-seconds.
 
 ## Getting Started
+The stable version is under the `stable` branch, which does never revert and
+is fully tested. The tags in `stable` branch indicate the version numbers.
+
+However, `master` branch is unstable version, and `dev` branch is development
+branch. `master` branch merges `dev` branch periodically.
+
+Btw, all the pull request should be sent to the `dev` branch.
+
 ### Installation
 The step below will download the library source code to
 `${GOPATH}/src/github.com/ccding/go-logging`.
@@ -37,6 +46,7 @@ import (
 
 func main() {
 	logger, _ := logging.SimpleLogger("main")
+	logger.SetLevel(logging.DEBUG)
 	logger.Error("this is a test from error")
 	logger.Destroy()
 }
@@ -166,8 +176,8 @@ It supports the following fields for the second part of the format.
 "process"       int        %d      // process id
 "message"       string     %d      // logger message
 ```
-The following fields is extremely expensive and slow, please be careful when
-using them.
+The following runtime-related fields is extremely expensive and slow, please
+be careful when using them.
 ```go
 "filename"      string     %s      // source filename of the caller
 "pathname"      string     %s      // filename with path
@@ -176,14 +186,15 @@ using them.
 "thread"        int32      %d      // thread id
 ```
 
-There are a few default pre-defined values for recordFormat
+There are a few pre-defined values for record format.
 ```go
 BasicFormat = "%s [%6s] %30s - %s\n name,levelname,time,message"
 RichFormat  = "%s [%6s] %d %30s - %d - %s:%s:%d - %s\n name, levelname, seqid, time, thread, filename, funcname, lineno, message"
 ```
 
 #### Other Operations
-It has two other operations to flush the writer and destroy the logger.
+It has two other operations to flush the writer and destroy the logger. These
+functions are not thread-safe.
 ```go
 (*Logger) Flush()             // flush the writer
 (*Logger) Destroy()           // destroy the logger
