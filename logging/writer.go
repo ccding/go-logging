@@ -65,7 +65,7 @@ func (logger *Logger) watcher() {
 	}
 }
 
-// FlushBuf flushes the content of buffer to out and reset the buffer
+// flushBuf flushes the content of buffer to out and reset the buffer
 func (logger *Logger) flushBuf(b *bytes.Buffer) {
 	if len(b.Bytes()) > 0 {
 		logger.out.Write(b.Bytes())
@@ -73,6 +73,7 @@ func (logger *Logger) flushBuf(b *bytes.Buffer) {
 	}
 }
 
+// flushReq handles the request and writes the result to writer
 func (logger *Logger) flushReq(b *bytes.Buffer, req *request) {
 	if int32(req.level) >= atomic.LoadInt32((*int32)(&logger.level)) {
 		if req.format == "" {
