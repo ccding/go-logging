@@ -69,7 +69,7 @@ type Logger struct {
 	// Internal used variables, which don't have get and set functions.
 	lock    sync.Mutex   // writer lock
 	queue   chan string  // queue used in async logging
-	request chan request // queue used in async logging
+	request chan request // queue used in non-runtime logging
 	flush   chan bool    // flush signal for the watcher to write
 	quit    chan bool    // quit signal for the watcher to quit
 	fd      *os.File     // file handler, used to close the file on destroy
@@ -139,7 +139,7 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 	logger.timeFormat = DefaultTimeFormat
 
 	// start watcher to write logs if it is async or no runtime field
-	if logger.sync == false || logger.runtime == false {
+	if !logger.sync {
 		go logger.watcher()
 	}
 
@@ -156,7 +156,7 @@ func (logger *Logger) Destroy() {
 }
 
 func (logger *Logger) quitWatcher() {
-	if logger.sync == false || logger.runtime == false {
+	if !logger.sync {
 		// quit watcher
 		logger.quit <- true
 		// wait for watcher quit
@@ -166,7 +166,7 @@ func (logger *Logger) quitWatcher() {
 
 // Flush the writer
 func (logger *Logger) Flush() {
-	if logger.sync == false || logger.runtime == false {
+	if !logger.sync {
 		logger.flush <- true
 	}
 }
@@ -239,7 +239,7 @@ func (logger *Logger) SetSync(sync bool) {
 	}
 	logger.quitWatcher()
 	logger.sync = sync
-	if logger.sync == false || logger.runtime == false {
+	if !logger.sync {
 		go logger.watcher()
 	}
 }

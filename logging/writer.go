@@ -92,7 +92,7 @@ func (logger *Logger) printLog(message string) {
 
 // log records log v... with level `level'.
 func (logger *Logger) log(level Level, v ...interface{}) {
-	if logger.runtime {
+	if logger.runtime || logger.sync {
 		if int32(level) >= atomic.LoadInt32((*int32)(&logger.level)) {
 			message := fmt.Sprint(v...)
 			message = logger.genLog(level, message)
@@ -108,7 +108,7 @@ func (logger *Logger) log(level Level, v ...interface{}) {
 
 // logf records log v... with level `level'.
 func (logger *Logger) logf(level Level, format string, v ...interface{}) {
-	if logger.runtime {
+	if logger.runtime || logger.sync {
 		if int32(level) >= atomic.LoadInt32((*int32)(&logger.level)) {
 			message := fmt.Sprintf(format, v...)
 			message = logger.genLog(level, message)
