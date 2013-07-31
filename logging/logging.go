@@ -67,10 +67,10 @@ type Logger struct {
 	timeFormat string    // format for time
 
 	// These variables are visible to users.
-	startTime  time.Time // start time of the logger
+	startTime time.Time // start time of the logger
 
 	// Internally used variables, which don't have get and set functions.
-	lock    sync.Mutex   // writer lock
+	wlock   sync.Mutex   // writer lock
 	queue   chan string  // queue used in async logging
 	request chan request // queue used in non-runtime logging
 	flush   chan bool    // flush signal for the watcher to write

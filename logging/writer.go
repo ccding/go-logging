@@ -82,8 +82,8 @@ func (logger *Logger) flushBuf(b *bytes.Buffer) {
 // printLog is to print log to file, stdout, or others.
 func (logger *Logger) printLog(message string) {
 	if logger.sync {
-		logger.lock.Lock()
-		defer logger.lock.Unlock()
+		logger.wlock.Lock()
+		defer logger.wlock.Unlock()
 		fmt.Fprintln(logger.out, message)
 	} else {
 		logger.queue <- message
