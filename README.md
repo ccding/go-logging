@@ -63,9 +63,12 @@ name           string        // logger name
 level          Level         // record level higher than this will be printed
 format         string        // format configuration
 out            io.Writer     // writer
-startTime      time.Time     // start time of the logger
 sync           bool          // use sync or async way to record logs
 timeFormat     string        // format for time
+```
+The defaule timeFormat is
+```go
+DefaultTimeFormat     = "2006-01-02 15:04:05.999999999" // default time format
 ```
 
 #### Logging Levels
@@ -128,8 +131,8 @@ multiple threads, please be sure locking them properly.
 (*Logger) SetSync(sync bool)               // set to sync or async
 ```
 
-#### Logging Format
-The logging format is described by a string, which has two parts separated by
+#### Record Format
+The record format is described by a string, which has two parts separated by
 `\n`. The first part describes the format of the log, and the second part
 lists all the fields to be shown in the log. In other word, the first part is
 the first parameter `format` of `fmt.Printf(format string, v ...interface{})`,
@@ -163,7 +166,8 @@ It supports the following fields for the second part of the format.
 "process"       int        %d      // process id
 "message"       string     %d      // logger message
 ```
-The following fields is extremely slow, please be careful when using them.
+The following fields is extremely expensive and slow, please be careful when
+using them.
 ```go
 "filename"      string     %s      // source filename of the caller
 "pathname"      string     %s      // filename with path
@@ -172,6 +176,11 @@ The following fields is extremely slow, please be careful when using them.
 "thread"        int32      %d      // thread id
 ```
 
+There are a few default pre-defined values for recordFormat
+```go
+BasicFormat = "%s [%6s] %30s - %s\n name,levelname,time,message"
+RichFormat  = "%s [%6s] %d %30s - %d - %s:%s:%d - %s\n name, levelname, seqid, time, thread, filename, funcname, lineno, message"
+```
 
 #### Other Operations
 It has two other operations to flush the writer and destroy the logger.
