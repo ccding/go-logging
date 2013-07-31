@@ -176,10 +176,6 @@ func (logger *Logger) Name() string {
 	return logger.name
 }
 
-func (logger *Logger) SetName(name string) {
-	logger.name = name
-}
-
 func (logger *Logger) TimeFormat() string {
 	return logger.timeFormat
 }
