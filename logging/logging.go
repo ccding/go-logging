@@ -29,8 +29,10 @@
 package logging
 
 import (
+	"github.com/ccding/go-config-reader/config"
 	"io"
 	"os"
+	"strconv"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -39,6 +41,7 @@ import (
 // Pre-defined formats
 const (
 	DefaultFileName   = "logging.log"                   // default logging filename
+	DefaultConfigFile = "logging.conf"                  // default logging configuration file
 	DefaultTimeFormat = "2006-01-02 15:04:05.999999999" // defaulttime format
 	bufSize           = 1000                            // buffer size for writer
 	queueSize         = 10000                           // chan queue size in async logging
@@ -105,8 +108,56 @@ func FileLogger(name string, level Level, format string, timeFormat string, file
 	return logger, err
 }
 
+// WriterLogger creates a new logger with a writer
 func WriterLogger(name string, level Level, format string, timeFormat string, out io.Writer, sync bool) (*Logger, error) {
 	return createLogger(name, level, format, timeFormat, out, sync)
+}
+
+// WriterLogger creates a new logger from a configuration file
+func ConfigLogger(filename string) (*Logger, error) {
+	conf, err := config.Read(filename)
+	if err != nil {
+		return new(Logger), err
+	}
+	ok := true
+	name, ok := conf["name"]
+	if !ok {
+		name = ""
+	}
+	slevel, ok := conf["level"]
+	if !ok {
+		slevel = "0"
+	}
+	l, err := strconv.Atoi(slevel)
+	if err != nil {
+		return new(Logger), err
+	}
+	level := Level(l)
+	format, ok := conf["format"]
+	if !ok {
+		format = BasicFormat
+	}
+	timeFormat, ok := conf["timeFormat"]
+	if !ok {
+		timeFormat = DefaultTimeFormat
+	}
+	ssync, ok := conf["sync"]
+	if !ok {
+		ssync = "0"
+	}
+	file, ok := conf["sync"]
+	if !ok {
+		file = DefaultConfigFile
+	}
+	sync := true
+	if ssync == "0" {
+		sync = false
+	} else if ssync == "1" {
+		sync = true
+	} else {
+		return new(Logger), err
+	}
+	return FileLogger(name, level, format, timeFormat, file, sync)
 }
 
 // createLogger create a new logger
