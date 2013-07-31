@@ -38,11 +38,11 @@ import (
 
 // Pre-defined formats
 const (
-	DefaultFileName       = "logging.log"                   // default logging filename
-	DefaultTimeFormat     = "2006-01-02 15:04:05.999999999" // defaulttime format
-	bufSize               = 1000                            // buffer size for writer
-	queueSize             = 10000                           // chan queue size in async logging
-	reqSize               = 10000                           // chan queue size in async logging
+	DefaultFileName   = "logging.log"                   // default logging filename
+	DefaultTimeFormat = "2006-01-02 15:04:05.999999999" // defaulttime format
+	bufSize           = 1000                            // buffer size for writer
+	queueSize         = 10000                           // chan queue size in async logging
+	reqSize           = 10000                           // chan queue size in async logging
 )
 
 // Logger is the logging struct.
@@ -86,38 +86,38 @@ type request struct {
 
 // SimpleLogger creates a new logger with simple configuration.
 func SimpleLogger(name string) (*Logger, error) {
-	return createLogger(name, WARNING, BasicFormat, os.Stdout, false)
+	return createLogger(name, WARNING, BasicFormat, DefaultTimeFormat, os.Stdout, false)
 }
 
 // BasicLogger creates a new logger with basic configuration.
 func BasicLogger(name string) (*Logger, error) {
-	return FileLogger(name, WARNING, BasicFormat, DefaultFileName, false)
+	return FileLogger(name, WARNING, BasicFormat, DefaultTimeFormat, DefaultFileName, false)
 }
 
 // RichLogger creates a new logger with simple configuration.
 func RichLogger(name string) (*Logger, error) {
-	return FileLogger(name, NOTSET, RichFormat, DefaultFileName, false)
+	return FileLogger(name, NOTSET, RichFormat, DefaultTimeFormat, DefaultFileName, false)
 }
 
 // FileLogger creates a new logger with file output.
-func FileLogger(name string, level Level, format string, file string, sync bool) (*Logger, error) {
+func FileLogger(name string, level Level, format string, timeFormat string, file string, sync bool) (*Logger, error) {
 	out, err := os.Create(file)
 	if err != nil {
 		return new(Logger), err
 	}
-	logger, err := createLogger(name, level, format, out, sync)
+	logger, err := createLogger(name, level, format, timeFormat, out, sync)
 	if err == nil {
 		logger.fd = out
 	}
 	return logger, err
 }
 
-func WriterLogger(name string, level Level, format string, out io.Writer, sync bool) (*Logger, error) {
-	return createLogger(name, level, format, out, sync)
+func WriterLogger(name string, level Level, format string, timeFormat string, out io.Writer, sync bool) (*Logger, error) {
+	return createLogger(name, level, format, timeFormat, out, sync)
 }
 
 // createLogger create a new logger
-func createLogger(name string, level Level, format string, out io.Writer, sync bool) (*Logger, error) {
+func createLogger(name string, level Level, format string, timeFormat string, out io.Writer, sync bool) (*Logger, error) {
 	logger := new(Logger)
 
 	err := logger.parseFormat(format)
@@ -137,7 +137,7 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 	logger.quit = make(chan bool)
 	logger.startTime = time.Now()
 	logger.fd = nil
-	logger.timeFormat = DefaultTimeFormat
+	logger.timeFormat = timeFormat
 
 	// start watcher to write logs if it is async or no runtime field
 	if !logger.sync {
