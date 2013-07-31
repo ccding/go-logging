@@ -188,10 +188,6 @@ func (logger *Logger) TimeFormat() string {
 	return logger.timeFormat
 }
 
-func (logger *Logger) SetTimeFormat(format string) {
-	logger.timeFormat = format
-}
-
 func (logger *Logger) Level() Level {
 	return Level(atomic.LoadInt32((*int32)(&logger.level)))
 }
@@ -206,10 +202,6 @@ func (logger *Logger) Format() string {
 
 func (logger *Logger) Fargs() []string {
 	return logger.rargs
-}
-
-func (logger *Logger) SetFormat(format string) error {
-	return logger.parseFormat(format)
 }
 
 func (logger *Logger) Writer() io.Writer {
@@ -234,15 +226,4 @@ func (logger *Logger) SetWriters(out ...io.Writer) {
 
 func (logger *Logger) Sync() bool {
 	return logger.sync
-}
-
-func (logger *Logger) SetSync(sync bool) {
-	if sync == logger.sync {
-		return
-	}
-	logger.quitWatcher()
-	logger.sync = sync
-	if !logger.sync {
-		go logger.watcher()
-	}
 }
