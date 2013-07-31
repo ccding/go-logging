@@ -177,6 +177,10 @@ func (logger *Logger) Name() string {
 	return logger.name
 }
 
+func (logger *Logger) StartTime() int64 {
+	return logger.startTime.UnixNano()
+}
+
 func (logger *Logger) TimeFormat() string {
 	return logger.timeFormat
 }
