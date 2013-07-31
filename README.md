@@ -14,9 +14,9 @@ go get github.com/ccding/go-logging/logging
 Given the source code downloaded, it makes you be able to run the examples,
 tests, and benchmarks.
 ```bash
-cd ${GOPATH}/src/github.com/ccding/go-logging
+cd ${GOPATH}/src/github.com/ccding/go-logging/logging
 go get
-go run example
+go run ../example.go
 go test -v -bench .
 ```
 
@@ -163,6 +163,15 @@ It supports the following fields for the second part of the format.
 "process"       int        %d      // process id
 "message"       string     %d      // logger message
 ```
+The following fields is extremely slow, please be careful when using them.
+```go
+"filename"      string     %s      // source filename of the caller
+"pathname"      string     %s      // filename with path
+"lineno"        int        %d      // line number in source code
+"funcname"      string     %s      // function name of the caller
+"thread"        int32      %d      // thread id
+```
+
 
 #### Other Operations
 It has two other operations to flush the writer and destroy the logger.
