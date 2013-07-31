@@ -44,6 +44,7 @@ const (
 	bufSize               = 1000                            // buffer size for writer
 	queueSize             = 10000                           // chan queue size in async logging
 	reqSize               = 10000                           // chan queue size in async logging
+	flushSize             = 1                               // chen queue used to flush the writer
 )
 
 // Logger is the logging struct.
@@ -132,7 +133,7 @@ func createLogger(name string, level Level, format string, out io.Writer, sync b
 	logger.sync = sync
 	logger.queue = make(chan string, queueSize)
 	logger.request = make(chan request, reqSize)
-	logger.flush = make(chan bool)
+	logger.flush = make(chan bool, flushSize)
 	logger.quit = make(chan bool)
 	logger.startTime = time.Now()
 	logger.fd = nil
