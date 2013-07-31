@@ -66,6 +66,8 @@ RichLogger(name string) (*Logger, error)
 FileLogger(name string, level Level, format string, timeFormat string, file string, sync bool) (*Logger, error)
 // with detailed configuration and writing to a writer
 WriterLogger(name string, level Level, format string, timeFormat string, out io.Writer, sync bool) (*Logger, error)
+// read configurations from a config file
+ConfigLogger(filename string) (*Logger, error)
 ```
 The meanings of these fields are
 ```go
