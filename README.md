@@ -56,11 +56,11 @@ func main() {
 #### Construction Functions
 It has the following functions to create a logger.
 ```go
-// with basic configuration and writing to stdout
+// with BasicFormat and writing to stdout
 SimpleLogger(name string) (*Logger, error)
-// with basic configuration and writing to DefaultFileName 'logging.log'
+// with BasicFormat and writing to DefaultFileName
 BasicLogger(name string) (*Logger, error)
-// with rich configuration and writing to DefaultFileName 'logging.log'
+// with RichFormatand writing to DefaultFileName
 RichLogger(name string) (*Logger, error)
 // with detailed configuration and writing to file
 FileLogger(name string, level Level, format string, file string, sync bool) (*Logger, error)
@@ -94,7 +94,7 @@ DEBUG        10
 NOTSET       0
 ```
 
-#### Logging
+#### Logging Functions
 It supports the following operations for logging. All of these functions are
 thread-safe.
 ```go
@@ -118,22 +118,27 @@ thread-safe.
 (*Logger) Notset(v ...interface{})
 ```
 
-#### Getters and Setters
-The logger supports the following getter and setter operations.
-In these functions, `SetWriter` is not thread-safe, while others are.
+#### Operations
+The logger supports the following operations.  In these functions, `SetWriter`
+and `Destroy` are not thread-safe, while others are. All these functions are
+running in a synchronous way.
 ```go
 // Getter functions
 (*Logger) Name() string                    // get name
 (*Logger) TimeFormat() string              // get time format
 (*Logger) Level() Level                    // get level  [this function is thread safe]
-(*Logger) Rfmt() string                  // get the first part of the format
-(*Logger) Rargs() []string                 // get the second part of the format
+(*Logger) RecordFormat() string            // get the first part of the format
+(*Logger) RecordArgs() []string            // get the second part of the format
 (*Logger) Writer() io.Writer               // get writer
 (*Logger) Sync() bool                      // get sync or async
 
 // Setter functions
 (*Logger) SetLevel(level Level)            // set level  [this function is thread safe]
 (*Logger) SetWriter(out ...io.Writer)      // set multiple writers
+
+// Other functions
+(*Logger) Flush()             // flush the writer
+(*Logger) Destroy()           // destroy the logger
 ```
 
 #### Record Format
@@ -185,14 +190,6 @@ There are a few pre-defined values for record format.
 ```go
 BasicFormat = "%s [%6s] %30s - %s\n name,levelname,time,message"
 RichFormat  = "%s [%6s] %d %30s - %d - %s:%s:%d - %s\n name, levelname, seqid, time, thread, filename, funcname, lineno, message"
-```
-
-#### Other Operations
-It has two other operations to flush the writer and destroy the logger. These
-functions are not thread-safe.
-```go
-(*Logger) Flush()             // flush the writer
-(*Logger) Destroy()           // destroy the logger
 ```
 
 ## Contributors
