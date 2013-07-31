@@ -25,7 +25,6 @@ import (
 func BenchmarkSync(b *testing.B) {
 	logger, _ := RichLogger("main")
 	logger.SetLevel(NOTSET)
-	logger.SetSync(true)
 	for i := 0; i < b.N; i++ {
 		logger.Error("this is a test from error")
 	}
@@ -36,7 +35,6 @@ func BenchmarkSync(b *testing.B) {
 func BenchmarkAsync(b *testing.B) {
 	logger, _ := RichLogger("main")
 	logger.SetLevel(NOTSET)
-	logger.SetSync(false)
 	for i := 0; i < b.N; i++ {
 		logger.Error("this is a test from error")
 	}
@@ -47,7 +45,6 @@ func BenchmarkAsync(b *testing.B) {
 func BenchmarkBasicSync(b *testing.B) {
 	logger, _ := BasicLogger("main")
 	logger.SetLevel(NOTSET)
-	logger.SetSync(true)
 	for i := 0; i < b.N; i++ {
 		logger.Error("this is a test from error")
 	}
@@ -58,7 +55,6 @@ func BenchmarkBasicSync(b *testing.B) {
 func BenchmarkBasicAsync(b *testing.B) {
 	logger, _ := BasicLogger("main")
 	logger.SetLevel(NOTSET)
-	logger.SetSync(false)
 	for i := 0; i < b.N; i++ {
 		logger.Error("this is a test from error")
 	}
