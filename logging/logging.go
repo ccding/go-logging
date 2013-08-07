@@ -115,17 +115,14 @@ func WriterLogger(name string, level Level, format string, timeFormat string, ou
 
 // WriterLogger creates a new logger from a configuration file
 func ConfigLogger(filename string) (*Logger, error) {
-	conf, err := config.Read(filename)
+	conf := config.NewConfig(filename)
+	err := conf.Read()
 	if err != nil {
 		return new(Logger), err
 	}
-	ok := true
-	name, ok := conf["name"]
-	if !ok {
-		name = ""
-	}
-	slevel, ok := conf["level"]
-	if !ok {
+	name := conf.Get("name")
+	slevel := conf.Get("level")
+	if slevel == "" {
 		slevel = "0"
 	}
 	l, err := strconv.Atoi(slevel)
@@ -133,20 +130,20 @@ func ConfigLogger(filename string) (*Logger, error) {
 		return new(Logger), err
 	}
 	level := Level(l)
-	format, ok := conf["format"]
-	if !ok {
+	format:= conf.Get("format")
+	if format == "" {
 		format = BasicFormat
 	}
-	timeFormat, ok := conf["timeFormat"]
-	if !ok {
+	timeFormat := conf.Get("timeFormat")
+	if timeFormat == "" {
 		timeFormat = DefaultTimeFormat
 	}
-	ssync, ok := conf["sync"]
-	if !ok {
+	ssync  := conf.Get("sync")
+	if ssync == "" {
 		ssync = "0"
 	}
-	file, ok := conf["file"]
-	if !ok {
+	file := conf.Get("file")
+	if file == "" {
 		file = DefaultFileName
 	}
 	sync := true
