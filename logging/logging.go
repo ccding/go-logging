@@ -120,8 +120,8 @@ func ConfigLogger(filename string) (*Logger, error) {
 	if err != nil {
 		return new(Logger), err
 	}
-	name := conf.Get("name")
-	slevel := conf.Get("level")
+	name := conf.Get("", "name")
+	slevel := conf.Get("", "level")
 	if slevel == "" {
 		slevel = "0"
 	}
@@ -130,19 +130,19 @@ func ConfigLogger(filename string) (*Logger, error) {
 		return new(Logger), err
 	}
 	level := Level(l)
-	format:= conf.Get("format")
+	format := conf.Get("", "format")
 	if format == "" {
 		format = BasicFormat
 	}
-	timeFormat := conf.Get("timeFormat")
+	timeFormat := conf.Get("", "timeFormat")
 	if timeFormat == "" {
 		timeFormat = DefaultTimeFormat
 	}
-	ssync  := conf.Get("sync")
+	ssync := conf.Get("", "sync")
 	if ssync == "" {
 		ssync = "0"
 	}
-	file := conf.Get("file")
+	file := conf.Get("", "file")
 	if file == "" {
 		file = DefaultFileName
 	}
