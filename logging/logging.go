@@ -99,13 +99,15 @@ func RichLogger(name string) (*Logger, error) {
 func FileLogger(name string, level Level, format string, timeFormat string, file string, sync bool) (*Logger, error) {
 	out, err := os.Create(file)
 	if err != nil {
-		return new(Logger), err
+		return nil, err
 	}
 	logger, err := createLogger(name, level, format, timeFormat, out, sync)
 	if err == nil {
 		logger.fd = out
+		return logger, nil
+	} else {
+		return nil, err
 	}
-	return logger, err
 }
 
 // WriterLogger creates a new logger with a writer
@@ -118,7 +120,7 @@ func ConfigLogger(filename string) (*Logger, error) {
 	conf := config.NewConfig(filename)
 	err := conf.Read()
 	if err != nil {
-		return new(Logger), err
+		return nil, err
 	}
 	name := conf.Get("", "name")
 	slevel := conf.Get("", "level")
@@ -127,7 +129,7 @@ func ConfigLogger(filename string) (*Logger, error) {
 	}
 	l, err := strconv.Atoi(slevel)
 	if err != nil {
-		return new(Logger), err
+		return nil, err
 	}
 	level := Level(l)
 	format := conf.Get("", "format")
@@ -152,7 +154,7 @@ func ConfigLogger(filename string) (*Logger, error) {
 	} else if ssync == "1" {
 		sync = true
 	} else {
-		return new(Logger), err
+		return nil, err
 	}
 	return FileLogger(name, level, format, timeFormat, file, sync)
 }
@@ -163,7 +165,7 @@ func createLogger(name string, level Level, format string, timeFormat string, ou
 
 	err := logger.parseFormat(format)
 	if err != nil {
-		return logger, err
+		return nil, err
 	}
 
 	// asign values to logger
