@@ -38,7 +38,6 @@ import (
 
 func main() {
 	logger, _ := logging.SimpleLogger("main")
-	logger.SetLevel(logging.DEBUG)
 	logger.Error("this is a test from error")
 	logger.Destroy()
 }
