@@ -25,7 +25,7 @@ import (
 // pre-defined formats
 const (
 	BasicFormat = "%s [%6s] %30s - %s\n name,levelname,time,message"
-	RichFormat  = "%s [%6s] %d %30s - %d - %s:%s:%d - %s\n name, levelname, seqid, time, filename, funcname, lineno, message"
+	RichFormat  = "%s [%6s] %d %30s - %s:%s:%d - %s\n name, levelname, seqid, time, filename, funcname, lineno, message"
 )
 
 // genLog generates log string from the format setting.
