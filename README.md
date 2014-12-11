@@ -172,7 +172,7 @@ It supports the following fields for the second part of the format.
 "funcname"      string     %s      // function name of the caller
 "thread"        int32      %d      // thread id
 "process"       int        %d      // process id
-"message"       string     %d      // logger message
+"message"       string     %s      // logger message
 ```
 The following runtime-related fields is extremely expensive and slow, please
 be careful when using them.
