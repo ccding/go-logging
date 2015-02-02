@@ -25,17 +25,6 @@ import (
 func empty() {
 }
 
-func TestGetGoID(t *testing.T) {
-	for i := 0; i < 1000; i++ {
-		goid := int(GetGoID())
-		go empty()
-		goid2 := int(GetGoID())
-		if goid != goid2 {
-			t.Errorf("%v, %v\n", goid, goid2)
-		}
-	}
-}
-
 func TestSeqid(t *testing.T) {
 	logger, _ := BasicLogger("test")
 	for i := 0; i < 1000; i++ {

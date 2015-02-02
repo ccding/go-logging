@@ -170,7 +170,6 @@ It supports the following fields for the second part of the format.
 "module"        string     %s      // executable filename
 "lineno"        int        %d      // line number in source code
 "funcname"      string     %s      // function name of the caller
-"thread"        int32      %d      // thread id
 "process"       int        %d      // process id
 "message"       string     %s      // logger message
 ```
@@ -181,13 +180,12 @@ be careful when using them.
 "pathname"      string     %s      // filename with path
 "lineno"        int        %d      // line number in source code
 "funcname"      string     %s      // function name of the caller
-"thread"        int32      %d      // thread id
 ```
 
 There are a few pre-defined values for record format.
 ```go
 BasicFormat = "%s [%6s] %30s - %s\n name,levelname,time,message"
-RichFormat  = "%s [%6s] %d %30s - %d - %s:%s:%d - %s\n name, levelname, seqid, time, thread, filename, funcname, lineno, message"
+RichFormat  = "%s [%6s] %d %30s - %d - %s:%s:%d - %s\n name, levelname, seqid, time, filename, funcname, lineno, message"
 ```
 
 ##### Time Format

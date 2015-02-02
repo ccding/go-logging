@@ -56,7 +56,6 @@ var fields = map[string]func(*Logger, *record) interface{}{
 	"module":    (*Logger).module,    // executable filename
 	"lineno":    (*Logger).lineno,    // line number in source code
 	"funcname":  (*Logger).funcname,  // function name of the caller
-	"thread":    (*Logger).thread,    // thread id
 	"process":   (*Logger).process,   // process id
 	"message":   (*Logger).message,   // logger message
 }
@@ -84,9 +83,6 @@ var runtimeFields = map[string]bool{
 // If it fails to get some fields with string type, these fields are set to
 // errString value.
 const errString = "???"
-
-// GetGoID returns the id of goroutine, which is defined in ./get_go_id.c
-func GetGoID() int32
 
 // genRuntime generates the runtime information, including pathname, function
 // name, filename, line number.
@@ -212,14 +208,6 @@ func (logger *Logger) rtime(r *record) interface{} {
 		r.time = time.Now()
 	}
 	return r.time.Sub(logger.startTime).Nanoseconds()
-}
-
-// Thread ID
-func (logger *Logger) thread(r *record) interface{} {
-	if r.thread == 0 {
-		r.thread = int(GetGoID())
-	}
-	return r.thread
 }
 
 // Process ID
