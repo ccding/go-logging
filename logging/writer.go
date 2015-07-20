@@ -39,7 +39,7 @@ func (logger *Logger) watcher() {
 				i = bufSize
 			case <-logger.flush:
 				logger.flushBuf(&buf)
-				logger.flush <- true
+				logger.finish <- true
 				i = bufSize
 			case <-logger.quit:
 				// If quit signal received, cleans the channel

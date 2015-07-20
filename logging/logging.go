@@ -75,6 +75,7 @@ type Logger struct {
 	queue   chan string  // queue used in async logging
 	request chan request // queue used in non-runtime logging
 	flush   chan bool    // flush signal for the watcher to write
+	finish  chan bool    // finish flush signal for the flush function to return
 	quit    chan bool    // quit signal for the watcher to quit
 	fd      *os.File     // file handler, used to close the file on destroy
 	runtime bool         // with runtime operation or not
@@ -177,6 +178,7 @@ func createLogger(name string, level Level, format string, timeFormat string, ou
 	logger.queue = make(chan string, queueSize)
 	logger.request = make(chan request, reqSize)
 	logger.flush = make(chan bool)
+	logger.finish = make(chan bool)
 	logger.quit = make(chan bool)
 	logger.startTime = time.Now()
 	logger.fd = nil
@@ -209,8 +211,8 @@ func (logger *Logger) Flush() {
 	if !logger.sync {
 		// send flush signal
 		logger.flush <- true
-		// wait for flush finish
-		<-logger.flush
+		// wait for the flush finish
+		<-logger.finish
 	}
 }
 
