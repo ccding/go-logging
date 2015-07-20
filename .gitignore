@@ -1,3 +1,7 @@
+# Temporary files for running example
+go-logging
+logging.log
+
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o
 *.a
