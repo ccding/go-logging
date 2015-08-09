@@ -1,4 +1,11 @@
 #go-logging
+
+[![Build Status](https://travis-ci.org/ccding/go-logging.svg?branch=master)]
+(https://travis-ci.org/ccding/go-logging)
+[![GoDoc](https://godoc.org/github.com/ccding/go-logging?status.svg)]
+(http://godoc.org/github.com/ccding/go-logging)
+
+
 go-logging is a high-performance logging library for golang.
 * Simple: It supports only necessary operations and easy to get start.
 * Fast: Asynchronous logging without runtime-related fields has an extremely
