@@ -225,6 +225,3 @@ In alphabetical order
 [ccding]: //github.com/ccding
 [xiangli]: //github.com/xiangli-cmu
 [5kg]: //github.com/5kg
-
-## TODO List
-1. logging server
