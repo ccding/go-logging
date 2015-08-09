@@ -10,6 +10,14 @@ go-logging is a high-performance logging library for golang.
 * Simple: It supports only necessary operations and easy to get start.
 * Fast: Asynchronous logging without runtime-related fields has an extremely
   low delay of about 800 nano-seconds.
+* Performance in my laptop as follow.
+```bash
+BenchmarkSync		  300000	      4472 ns/op
+BenchmarkAsync		  300000	      4503 ns/op
+BenchmarkBasicSync	  500000	      2869 ns/op
+BenchmarkBasicAsync	  500000	      2963 ns/op
+BenchmarkPrintln	 1000000	      1474 ns/op
+```
 
 ## Getting Started
 ### Installation
