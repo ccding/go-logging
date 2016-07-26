@@ -4,6 +4,8 @@
 (https://travis-ci.org/ccding/go-logging)
 [![GoDoc](https://godoc.org/github.com/ccding/go-logging?status.svg)]
 (http://godoc.org/github.com/ccding/go-logging/logging)
+[![Go Report Card](https://goreportcard.com/badge/github.com/ccding/go-logging)]
+(https://goreportcard.com/report/github.com/ccding/go-logging)
 
 go-logging is a high-performance logging library for golang.
 * Simple: It supports only necessary operations and easy to get start.
