@@ -169,7 +169,7 @@ func createLogger(name string, level Level, format string, timeFormat string, ou
 		return nil, err
 	}
 
-	// asign values to logger
+	// assign values to logger
 	logger.name = name
 	logger.level = level
 	logger.out = out
