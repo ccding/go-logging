@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/ccding/go-logging.svg?branch=master)]
 (https://travis-ci.org/ccding/go-logging)
+[![License](https://img.shields.io/badge/License-Apache%202.0-red.svg)]
+(https://opensource.org/licenses/Apache-2.0)
 [![GoDoc](https://godoc.org/github.com/ccding/go-logging?status.svg)]
 (http://godoc.org/github.com/ccding/go-logging/logging)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ccding/go-logging)]
