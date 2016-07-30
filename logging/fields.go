@@ -21,6 +21,7 @@ import (
 	"os"
 	"path"
 	"runtime"
+	"strings"
 	"sync/atomic"
 	"time"
 )
@@ -84,24 +85,21 @@ var runtimeFields = map[string]bool{
 // errString value.
 const errString = "???"
 
+// getShortFuncName generates short function name.
+func getShortFuncName(fname string) string {
+	fns := strings.Split(fname, ".")
+	return fns[len(fns)-1]
+}
+
 // genRuntime generates the runtime information, including pathname, function
 // name, filename, line number.
-func genRuntime(r *record) {
+func (r *record) genRuntime() {
 	calldepth := 5
 	pc, file, line, ok := runtime.Caller(calldepth)
 	if ok {
-		// Generate short function name
 		fname := runtime.FuncForPC(pc).Name()
-		fshort := fname
-		for i := len(fname) - 1; i > 0; i-- {
-			if fname[i] == '.' {
-				fshort = fname[i+1:]
-				break
-			}
-		}
-
 		r.pathname = file
-		r.funcname = fshort
+		r.funcname = getShortFuncName(fname)
 		r.filename = path.Base(file)
 		r.lineno = line
 	} else {
@@ -141,7 +139,7 @@ func (logger *Logger) levelname(r *record) interface{} {
 // File name of calling logger, with whole path
 func (logger *Logger) pathname(r *record) interface{} {
 	if r.pathname == "" {
-		genRuntime(r)
+		r.genRuntime()
 	}
 	return r.pathname
 }
@@ -149,7 +147,7 @@ func (logger *Logger) pathname(r *record) interface{} {
 // File name of calling logger
 func (logger *Logger) filename(r *record) interface{} {
 	if r.filename == "" {
-		genRuntime(r)
+		r.genRuntime()
 	}
 	return r.filename
 }
@@ -163,7 +161,7 @@ func (logger *Logger) module(r *record) interface{} {
 // Line number
 func (logger *Logger) lineno(r *record) interface{} {
 	if r.lineno == 0 {
-		genRuntime(r)
+		r.genRuntime()
 	}
 	return r.lineno
 }
@@ -171,7 +169,7 @@ func (logger *Logger) lineno(r *record) interface{} {
 // Function name
 func (logger *Logger) funcname(r *record) interface{} {
 	if r.funcname == "" {
-		genRuntime(r)
+		r.genRuntime()
 	}
 	return r.funcname
 }
