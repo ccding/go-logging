@@ -15,11 +15,11 @@ go-logging is a high-performance logging library for golang.
   low delay of about 800 nano-seconds.
 * Performance in my laptop as follow.
 ```bash
-BenchmarkSync		  300000	      4472 ns/op
-BenchmarkAsync		  300000	      4503 ns/op
-BenchmarkBasicSync	  500000	      2869 ns/op
-BenchmarkBasicAsync	  500000	      2963 ns/op
-BenchmarkPrintln	 1000000	      1474 ns/op
+BenchmarkSync      	  300000	      4018 ns/op
+BenchmarkAsync     	  300000	      4229 ns/op
+BenchmarkBasicSync 	  500000	      2504 ns/op
+BenchmarkBasicAsync	 1000000	      2495 ns/op
+BenchmarkPrintln   	 1000000	      1550 ns/op
 ```
 
 ## Getting Started
