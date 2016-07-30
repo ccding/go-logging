@@ -10,7 +10,7 @@
 (https://goreportcard.com/report/github.com/ccding/go-logging)
 
 go-logging is a high-performance logging library for golang.
-* Simple: It supports only necessary operations and easy to get start.
+* Simple: It supports only necessary operations and easy to get started.
 * Fast: Asynchronous logging without runtime-related fields has an extremely
   low delay of about 800 nano-seconds.
 * Performance in my laptop as follow.
