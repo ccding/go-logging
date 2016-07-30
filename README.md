@@ -223,7 +223,7 @@ extremely low extra delay by the logging functions.
 ## Contributors
 In alphabetical order
 * Cong Ding ([ccding][ccding])
-* Xiang Li ([xiangli-cmu][xiangli])
+* Xiang Li ([xiang90][xiang90])
 * Zifei Tong ([5kg][5kg])
 [ccding]: //github.com/ccding
 [xiang90]: //github.com/xiang90
