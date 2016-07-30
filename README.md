@@ -226,5 +226,5 @@ In alphabetical order
 * Xiang Li ([xiangli-cmu][xiangli])
 * Zifei Tong ([5kg][5kg])
 [ccding]: //github.com/ccding
-[xiangli]: //github.com/xiangli-cmu
+[xiang90]: //github.com/xiang90
 [5kg]: //github.com/5kg
