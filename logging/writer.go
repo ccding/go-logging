@@ -27,20 +27,20 @@ import (
 func (logger *Logger) watcher() {
 	var buf bytes.Buffer
 	for {
-		timeout := time.After(time.Second / 10)
+		timeout := time.After(time.Millisecond * logger.timeInterval)
 
-		for i := 0; i < bufSize; i++ {
+		for i := 0; i < logger.bufferSize; i++ {
 			select {
 			case msg := <-logger.queue:
 				fmt.Fprintln(&buf, msg)
 			case req := <-logger.request:
 				logger.flushReq(&buf, &req)
 			case <-timeout:
-				i = bufSize
+				i = logger.bufferSize
 			case <-logger.flush:
 				logger.flushBuf(&buf)
 				logger.finish <- true
-				i = bufSize
+				i = logger.bufferSize
 			case <-logger.quit:
 				// If quit signal received, cleans the channel
 				// and writes all of them to io.Writer.
