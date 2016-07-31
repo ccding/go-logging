@@ -120,7 +120,13 @@ func WriterLogger(name string, level Level, format string, timeFormat string, ou
 	return createLogger(name, level, format, timeFormat, out, sync)
 }
 
-// WriterLogger creates a new logger from a configuration file
+// CustomizedLogger creates a new logger with all configurations customized
+// (in addition to WriterLogger).
+func CustomizedLogger(name string, level Level, format string, timeFormat string, out io.Writer, sync bool, queueSize int, requestSize int, bufferSize int, timeInterval time.Duration) (*Logger, error) {
+	return createCustomizedLogger(name, level, format, timeFormat, out, sync, DefaultQueueSize, DefaultRequestSize, DefaultBufferSize, DefaultTimeInterval)
+}
+
+// ConfigLogger creates a new logger from a configuration file
 func ConfigLogger(filename string) (*Logger, error) {
 	conf := config.NewConfig(filename)
 	err := conf.Read()
