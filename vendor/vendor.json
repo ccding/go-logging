@@ -1,0 +1,19 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "V5fI1L0jZRkPPx0NRSLe3Eqefd0=",
+			"path": "github.com/ccding/go-config-reader/config",
+			"revision": "8b6c2b50197f20da3b1c5944c274c173634dc056",
+			"revisionTime": "2013-08-17T22:59:50Z"
+		},
+		{
+			"checksumSHA1": "6nmAJBw2phU9MUmkUnqFvbO5urg=",
+			"path": "github.com/kardianos/osext",
+			"revision": "29ae4ffbc9a6fe9fb2bc5029050ce6996ea1d3bc",
+			"revisionTime": "2015-12-22T15:32:29Z"
+		}
+	],
+	"rootPath": "github.com/ccding/go-logging"
+}
