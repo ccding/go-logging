@@ -1,4 +1,4 @@
-#go-logging
+# go-logging
 
 [![Build Status](https://travis-ci.org/ccding/go-logging.svg?branch=master)](https://travis-ci.org/ccding/go-logging)
 [![License](https://img.shields.io/badge/License-Apache%202.0-red.svg)](https://opensource.org/licenses/Apache-2.0)
