@@ -123,7 +123,7 @@ func WriterLogger(name string, level Level, format string, timeFormat string, ou
 // CustomizedLogger creates a new logger with all configurations customized
 // (in addition to WriterLogger).
 func CustomizedLogger(name string, level Level, format string, timeFormat string, out io.Writer, sync bool, queueSize int, requestSize int, bufferSize int, timeInterval time.Duration) (*Logger, error) {
-	return createCustomizedLogger(name, level, format, timeFormat, out, sync, DefaultQueueSize, DefaultRequestSize, DefaultBufferSize, DefaultTimeInterval)
+	return createCustomizedLogger(name, level, format, timeFormat, out, sync, queueSize, requestSize, bufferSize, timeInterval)
 }
 
 // ConfigLogger creates a new logger from a configuration file
